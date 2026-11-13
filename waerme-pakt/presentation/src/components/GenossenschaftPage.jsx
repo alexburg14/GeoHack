@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { STAKE } from '../data/unterhaching';
+import { STAKE } from '../data/town';
 
 // Genossenschaft pitch + calculator, modelled on the Bürgerbeteiligung page of the Wärme-Pakt app.
 // Conditions come from config/assumptions.json ("beteiligung"); all values are demo placeholders.
@@ -31,7 +31,7 @@ export default function GenossenschaftPage({ demandKwh }) {
     <div className="ep-page" style={{ maxWidth: 1040 }}>
       <div className="ep-coop-hero">
         <div>
-          <p className="eyebrow">Wärme-Genossenschaft Unterhaching</p>
+          <p className="eyebrow">Wärme-Genossenschaft Starnberg</p>
           <h1>Das Netz gehört denen, die es nutzen</h1>
           <p>
             Als Mitglied der Genossenschaft finanzieren Sie das Geothermie-Netz vor Ihrer Haustür mit, bestimmen mit und
@@ -127,7 +127,7 @@ export default function GenossenschaftPage({ demandKwh }) {
           {stage === 'confirm' && (
             <div className="ep-confirm">
               <p>
-                <strong>{eur(amount)}</strong> Einlage ({shares} Anteile) in der Wärme-Genossenschaft Unterhaching
+                <strong>{eur(amount)}</strong> Einlage ({shares} Anteile) in der Wärme-Genossenschaft Starnberg
               </p>
               <p className="muted" style={{ fontSize: 12.5, margin: '4px 0 12px' }}>
                 Demo: Hier würden Beitrittserklärung und SEPA-Lastschrift folgen. Es wird nichts abgebucht.
@@ -166,7 +166,7 @@ export default function GenossenschaftPage({ demandKwh }) {
               <span className="n">2</span>
               <div>
                 <strong>Das Netz wird gebaut</strong>
-                <p>Ihr Geld fließt in den Ausbau der Straßen in Unterhaching, Straße für Straße.</p>
+                <p>Ihr Geld fließt in den Ausbau der Straßen in Starnberg, Straße für Straße.</p>
               </div>
             </li>
             <li>

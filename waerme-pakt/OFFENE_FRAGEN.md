@@ -3,11 +3,11 @@
 Jede Antwort ersetzt einen Platzhalter in `config/assumptions.json`. Nach dem Eintragen: `python3 -m unittest` und
 Server neu starten. Die Werte erscheinen dann automatisch im Kostenvergleich, unter „Annahmen“ und beim KI-Berater.
 
-## Fragen an Geothermie Unterhaching
+## Fragen an den Betreiber
 
 | Frage | Feld in `assumptions.json` | Platzhalter heute |
 |---|---|---|
-| Wärmepreis für ein Einfamilienhaus: Arbeitspreis, Grundpreis, Messpreis? | `fernwaerme.mischpreis_ct` | 16,43 ct/kWh (Praxisforum-Vergleich) |
+| Wärmepreis für ein Einfamilienhaus: Arbeitspreis, Grundpreis, Messpreis? | `fernwaerme.mischpreis_ct` | 16,43 ct/kWh (Praxisforum, Vergleichswert Unterhaching) |
 | Wie ist die Preisgleitklausel aufgebaut (Index, Anpassung pro Jahr)? | `fernwaerme.preissteigerung` | 2 % pro Jahr |
 | Was kostet ein Hausanschluss mit Übergabestation, und gibt es eine Förderung (BEW/BEG)? | `fernwaerme.anschlusskosten_eur`, `fernwaerme.foerderquote` | 9.000 €, 30 % |
 | Welche Zusagequote braucht ein Straßenabschnitt wirklich? | `allgemein.zusage_schwelle` | 65 % |

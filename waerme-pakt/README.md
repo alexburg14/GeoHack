@@ -1,6 +1,6 @@
 # Wärme-Pakt · Geothermie Hackathon Pullach (Challenge 3)
 
-Web-App für Bürgerinnen und Bürger in Unterhaching: Adresse prüfen → Kosten vergleichen → Berater fragen → zusagen.
+Web-App für Bürgerinnen und Bürger in Starnberg (PLZ 82319): Adresse prüfen → Kosten vergleichen → Berater fragen → zusagen.
 Jede Zusage zählt für die ganze Straße; ab 65 % wird ein Abschnitt gebaut.
 
 ## Starten
@@ -20,11 +20,11 @@ damit die Live-Demo nie hängen bleibt.
 
 ## Demo-Ablauf (Familie Huber)
 
-1. Schritt 1: `Jägerstraße`, Nr. `12` → Bauphase 2, Anschluss 2029, 61 % zugesagt
+1. Schritt 1: `Ottostraße`, Nr. `12` → Bauphase 2, Anschluss 2029, 61 % zugesagt
 2. Schritt 2: „Beispiel: Familie Huber“ → Vergleich berechnen (Baujahr 1985, Gas, 17 Jahre, 140 m², 4 Personen)
 3. Schritt 3: „Was passiert, wenn meine Heizung vorher kaputtgeht?“ → Wartegarantie, „Störung jetzt melden“ → Ticket
 4. Beteiligung: 2.000 € → Zinsen, Wärmepreis-Bonus, „Beteiligung zeichnen“ (Zahlung nur als Attrappe)
-5. Schritt 4: „Ich bin dabei“ → Jägerstraße springt von 61 % auf 67 %, über die Schwelle, Platz 8 → 6
+5. Schritt 4: „Ich bin dabei“ → Ottostraße springt von 61 % auf 67 %, über die Schwelle, Platz 8 → 6
 
 „Demo zurücksetzen“ (Fußzeile) stellt die Zusagen wieder auf den Ausgangsstand.
 
@@ -53,10 +53,11 @@ verwenden. Modell: `claude-opus-5-5` (änderbar über `ANTHROPIC_MODEL` in `.env
 ## Daten
 
 - Straßengeometrie: © OpenStreetMap-Mitwirkende (ODbL), Overpass-Abfrage:
-  `area["name"="Unterhaching"]["admin_level"="8"]->.a;way(area.a)["highway"~"residential|living_street|tertiary|secondary"]["name"];out tags geom;`
-- Fernwärmepreis Unterhaching 16,43 ct/kWh: Praxisforum Geothermie Bayern / Enerchange, 13.02.2026 (Beispiel EFH 27.000 kWh)
+  `area["name"="Starnberg"]["admin_level"="8"]->.a;way(area.a)["highway"~"residential|living_street|tertiary|secondary"]["name"];out tags geom;`
+  `tools/build_streets.py` behält davon nur Straßen innerhalb seiner BBOX rund um die Ortsmitte.
+- Fernwärmepreis 16,43 ct/kWh (Vergleichswert Unterhaching): Praxisforum Geothermie Bayern / Enerchange, 13.02.2026 (Beispiel EFH 27.000 kWh)
 - Alles andere (Haushalte, Zusagen, Bauphasen, Preise, Förderquoten, Beteiligungskonditionen) sind **Platzhalter**.
-  Vor echtem Einsatz durch Daten von Geothermie Unterhaching ersetzen. Laut Teilnahmebedingungen dürfen
+  Vor echtem Einsatz durch Daten des Betreibers ersetzen. Laut Teilnahmebedingungen dürfen
   bereitgestellte Betriebsdaten nur während des Events genutzt und müssen danach gelöscht werden.
 
 ## Offene Punkte

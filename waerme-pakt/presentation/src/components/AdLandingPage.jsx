@@ -5,7 +5,7 @@ import LongRunStory from './LongRunStory';
 import NeighborhoodPage from './NeighborhoodPage';
 import GuaranteeSlides from './GuaranteeSlides';
 import GenossenschaftPage from './GenossenschaftPage';
-import { STREETS, PHASES, findStreet, areaOfStreet } from '../data/unterhaching';
+import { STREETS, PHASES, findStreet, areaOfStreet } from '../data/town';
 import { compare, connectionYear, START_YEAR, YEARS, ASSUMPTIONS_NOTE } from '../data/costModel';
 import './landing.css';
 
@@ -287,7 +287,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
                     onKeyDown={stopKeys}
-                    placeholder="z. B. Jägerstraße"
+                    placeholder="z. B. Ottostraße"
                     list="ep-streets"
                     autoComplete="off"
                   />
@@ -317,7 +317,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ''))}
                     onKeyDown={stopKeys}
-                    placeholder="82008"
+                    placeholder="82319"
                     autoComplete="off"
                   />
                 </label>

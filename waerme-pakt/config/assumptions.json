@@ -1,5 +1,5 @@
 {
-  "hinweis": "Alle Werte sind Platzhalter für die Hackathon-Demo. Vor echtem Einsatz durch Daten von Geothermie Unterhaching ersetzen.",
+  "hinweis": "Alle Werte sind Platzhalter für die Hackathon-Demo. Vor echtem Einsatz durch Daten des Betreibers ersetzen.",
   "allgemein": {
     "startjahr": {"wert": 2026, "einheit": "", "label": "Startjahr der Rechnung"},
     "jahre": {"wert": 20, "einheit": "Jahre", "label": "Betrachtungszeitraum"},
@@ -56,7 +56,7 @@
     }
   },
   "fernwaerme": {
-    "mischpreis_ct": {"wert": 16.43, "einheit": "ct/kWh", "label": "Wärmepreis Unterhaching inkl. Grundpreis", "quelle": "Praxisforum Geothermie Bayern, Pressemitteilung Enerchange 13.02.2026 (Beispiel EFH, 27.000 kWh)"},
+    "mischpreis_ct": {"wert": 16.43, "einheit": "ct/kWh", "label": "Wärmepreis inkl. Grundpreis (Vergleichswert Unterhaching)", "quelle": "Praxisforum Geothermie Bayern, Pressemitteilung Enerchange 13.02.2026 (Beispiel EFH, 27.000 kWh)"},
     "anschlusskosten_eur": {"wert": 9000, "einheit": "€", "label": "Hausanschluss und Übergabestation"},
     "foerderquote": {"wert": 0.3, "einheit": "", "label": "Förderung Anschluss"},
     "fruehzeichner_rabatt_eur": {"wert": 1500, "einheit": "€", "label": "Rabatt für frühe Zusage"},

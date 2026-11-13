@@ -75,9 +75,9 @@ export default function FactorPanel({ factors, setFactors, defaultJaz, result, b
             <span aria-hidden="true">🔒</span>
             <p>
               <b>Geothermie-Wärmepreis: {pct(FACTOR_DEFAULTS['fernwaerme.preissteigerung'])} pro Jahr.</b> Die Wärme kommt
-              aus 3.000 m Tiefe in Unterhaching, nicht von der Gas- oder Strombörse.
+              aus der Tiefe unter Starnberg, nicht von der Gas- oder Strombörse.
               <br />
-              <small className="muted">Annahme: hängt an der Preisgleitklausel, mit Geothermie Unterhaching zu prüfen.</small>
+              <small className="muted">Annahme: hängt an der Preisgleitklausel, mit dem Betreiber zu prüfen.</small>
             </p>
           </div>
         </div>

@@ -55,7 +55,7 @@ function quoteColor(q) {
 }
 
 function makeMap(id) {
-  const map = L.map(id, { scrollWheelZoom: false }).setView([48.0655, 11.617], 14);
+  const map = L.map(id, { scrollWheelZoom: false }).setView([48.0000, 11.3350], 14);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map);
@@ -470,7 +470,7 @@ function renderStakeInfo() {
       <li><time>Zins</time><span><b>${num(b.zins.wert * 100, 1)} % pro Jahr, fest</b>über ${b.laufzeit_jahre.wert} Jahre Laufzeit</span></li>
       <li><time>Bonus</time><span><b>${num(b.waermepreis_rabatt_ct.wert, 1)} ct/kWh günstigere Wärme</b>ab ${eur(b.rabatt_ab_eur.wert)} Beteiligung</span></li>
       <li><time>Betrag</time><span><b>${eur(b.mindestbetrag_eur.wert)} bis ${eur(b.hoechstbetrag_eur.wert)}</b>pro Haushalt</span></li>
-      <li><time>Wofür</time><span><b>Ausbau des Netzes in Unterhaching</b>Ihr Geld bleibt im Ort.</span></li>
+      <li><time>Wofür</time><span><b>Ausbau des Netzes in Starnberg</b>Ihr Geld bleibt im Ort.</span></li>
     </ul>
     <p class="note" style="margin-top:14px">Demo: Konditionen sind Platzhalter, es findet keine echte Zahlung statt.</p>`;
 }
@@ -498,7 +498,7 @@ function stakeCheckout() {
   $("#stake-side").innerHTML = `
     <h2>Beteiligung bestätigen</h2>
     <div class="pay-mock">
-      <p><b>${eur(amount)}</b> Beteiligung am Wärmenetz Unterhaching</p>
+      <p><b>${eur(amount)}</b> Beteiligung am Wärmenetz Starnberg</p>
       <p class="note">Demo: Hier würde die Zahlung (z. B. SEPA-Lastschrift) erfolgen. Es wird nichts abgebucht.</p>
     </div>
     <div class="cta-row"><button class="btn primary" id="stake-confirm">Zahlungspflichtig bestätigen (Demo)</button>
@@ -525,7 +525,7 @@ async function stakeConfirm() {
       <div class="kpi"><small>Bonus pro Jahr</small><b>${r.waermepreis_bonus_eur_pro_jahr === null ? "–" : eur(r.waermepreis_bonus_eur_pro_jahr)}</b></div>
       <div class="kpi"><small>Laufzeit</small><b>${r.laufzeit_jahre} Jahre</b></div>
     </div>
-    <p>Sie sind jetzt Miteigentümer des Wärmenetzes in Unterhaching.</p>${newTotal}`;
+    <p>Sie sind jetzt Miteigentümer des Wärmenetzes in Starnberg.</p>${newTotal}`;
   markDone("beteiligung");
   toast("Danke! Ihre Beteiligung ist vorgemerkt (Demo).");
 }

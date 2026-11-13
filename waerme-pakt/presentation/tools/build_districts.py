@@ -15,15 +15,15 @@ ROOT = Path(__file__).resolve().parent.parent
 STREETS = ROOT.parent / "data" / "streets.json"
 OUT = ROOT / "src" / "data" / "districts.json"
 
-# Districts follow the layout of the official Ausbauplanung map: north / west of the railway / east / south.
+# Four Ausbaugebiete around the town centre: north, west, east (station), south (lake side).
 DISTRICTS = [
-    {"id": "nord", "name": "Unterhaching Nord", "streets": ["Parkstraße", "Fasangartenstraße", "Bussardstraße"]},
-    {"id": "west", "name": "Unterhaching West", "streets": [
-        "Robert-Koch-Straße", "Jägerstraße", "Forststraße", "Sankt-Alto-Straße", "Pittingerstraße",
-        "Liebigstraße", "Lilienweg", "Rathausstraße", "Schulstraße"]},
-    {"id": "ost", "name": "Unterhaching Ost", "streets": [
-        "Am Sportpark", "Walter-Paetzmann-Straße", "Kapellenstraße", "Ludwig-Thoma-Straße", "Grünauer Allee"]},
-    {"id": "sued", "name": "Unterhaching Süd", "streets": ["Mühlweg", "Bürgermeister-Prenn-Straße", "Waldstraße"]},
+    {"id": "nord", "name": "Starnberg Nord", "streets": [
+        "Josef-Sigl-Straße", "Schießstättstraße", "Am Hochwald", "Hofbuchetstraße", "Waldschmidtstraße"]},
+    {"id": "west", "name": "Starnberg West", "streets": [
+        "Riedeselstraße", "Bismarckstraße", "Ottostraße", "An der Linde", "Nibelungenweg", "Maximilian-von-Dziembowski-Straße"]},
+    {"id": "ost", "name": "Starnberg Ost", "streets": [
+        "Schulstraße", "Ferdinand-Maria-Straße", "Giselastraße", "Max-Emanuel-Straße", "Rheinlandstraße"]},
+    {"id": "sued", "name": "Starnberg Süd", "streets": ["Jahnstraße", "Prinzenweg", "Wilhelmshöhenstraße", "Oberfeld"]},
 ]
 
 CELL = 20.0       # raster cell size in metres
