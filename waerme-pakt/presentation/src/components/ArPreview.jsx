@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import kellerFoto from '../assets/ar-keller.jpg'; // AI-generated basement photo (pollinations.ai), stands in for the camera
 
 // Concept mock of an AR view: the phone "scans" the basement, finds the floor and places the device
 // at true scale, so residents see how little room the district-heating station needs compared to a
 // heat pump. Sizes are typical example dimensions, not a specific product.
-const M = 120; // pixels per metre in the phone scene
-const FLOOR_Y = 330; // where wall meets floor
+// Scene coordinates are fitted to the photo: its left wall runs from x 0 to 138, about 2.4 m high.
+const M = 140; // pixels per metre in the phone scene
+const FLOOR_Y = 452; // where the left wall meets the floor
 
 const DEVICES = {
   fernwaerme: {
@@ -63,7 +65,7 @@ export default function ArPreview() {
   // Device box in scene coordinates (front face plus a skewed side face for depth).
   const bw = dev.w * M;
   const bh = dev.h * M;
-  const bx = 112;
+  const bx = 26;
   const by = FLOOR_Y - dev.lift * M - bh;
   const dx = dev.d * M * 0.45;
   const dy = -dev.d * M * 0.3;
@@ -95,7 +97,9 @@ export default function ArPreview() {
             </React.Fragment>
           ))}
         </dl>
-        <p className="muted" style={{ fontSize: 12 }}>Typische Beispielmaße, je nach Gerät und Haus verschieden.</p>
+        <p className="muted" style={{ fontSize: 12 }}>
+          Typische Beispielmaße, je nach Gerät und Haus verschieden. Kellerfoto KI-generiert (pollinations.ai).
+        </p>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 4 }}>
           <button type="button" className="ep-btn primary" onClick={() => setQr((q) => !q)}>
             📱 Im eigenen Keller ansehen
@@ -118,25 +122,8 @@ export default function ArPreview() {
 
       <div className="ep-ar-phone" aria-label={`AR-Vorschau: ${dev.label}, ${dev.summary}`}>
         <svg viewBox="0 0 280 520" width="100%" key={`${mode}-${run}`}>
-          <defs>
-            <linearGradient id="arWall" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#d9d2c8" />
-              <stop offset="1" stopColor="#c9c0b4" />
-            </linearGradient>
-            <linearGradient id="arFloor" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#9c9184" />
-              <stop offset="1" stopColor="#7d7266" />
-            </linearGradient>
-          </defs>
-
-          {/* Camera image: a plain basement corner */}
-          <rect width="280" height={FLOOR_Y} fill="url(#arWall)" />
-          <polygon points={`0,${FLOOR_Y} 280,${FLOOR_Y} 280,520 0,520`} fill="url(#arFloor)" />
-          <line x1="0" y1={FLOOR_Y} x2="280" y2={FLOOR_Y} stroke="#6f655a" strokeWidth="2" />
-          <rect x="18" y="60" width="54" height="40" rx="3" fill="#b9b0a4" stroke="#a69c8f" />
-          <line x1="230" y1="0" x2="230" y2={FLOOR_Y} stroke="#8c8276" strokeWidth="5" />
-          <line x1="246" y1="0" x2="246" y2={FLOOR_Y} stroke="#8c8276" strokeWidth="5" />
-          <rect x="196" y={FLOOR_Y - 70} width="60" height="70" fill="#a89e91" stroke="#968c80" />
+          {/* Camera image */}
+          <image href={kellerFoto} x="0" y="0" width="280" height="520" preserveAspectRatio="xMidYMid slice" />
 
           {/* Scan line */}
           {phase === 0 && <rect className="ar-scan" x="0" width="280" height="4" fill="#ffffff" opacity="0.8" />}
@@ -144,16 +131,16 @@ export default function ArPreview() {
           {/* Detected floor plane */}
           {phase >= 1 && (
             <g className="ar-fade">
-              <polygon points={`8,${FLOOR_Y + 8} 272,${FLOOR_Y + 8} 280,512 0,512`} fill="#ffffff" opacity="0.12" />
-              {Array.from({ length: 6 }, (_, r) =>
-                Array.from({ length: 8 }, (_, c) => (
+              <polygon points="0,474 138,438 280,452 280,520 0,520" fill="#ffffff" opacity="0.14" />
+              {Array.from({ length: 3 }, (_, r) =>
+                Array.from({ length: 9 }, (_, c) => (
                   <circle
                     key={`${r}-${c}`}
-                    cx={20 + c * 34 + r * 2}
-                    cy={FLOOR_Y + 22 + r * 30}
+                    cx={12 + c * 31 + r * 4}
+                    cy={482 + r * 14}
                     r="1.8"
                     fill="#ffffff"
-                    opacity="0.85"
+                    opacity="0.9"
                     style={{ animationDelay: `${(r + c) * 30}ms` }}
                     className="ar-dot"
                   />
@@ -187,10 +174,10 @@ export default function ArPreview() {
           {/* Measurements */}
           {phase >= 3 && (
             <g className="ar-measure" stroke="#ffffff" strokeWidth="1.5" fill="#ffffff">
-              <line x1={bx - 12} y1={by} x2={bx - 12} y2={by + bh} />
-              <line x1={bx - 16} y1={by} x2={bx - 8} y2={by} />
-              <line x1={bx - 16} y1={by + bh} x2={bx - 8} y2={by + bh} />
-              <MeasureTag x={bx - 12} y={by + bh / 2} text={`${Math.round(dev.h * 100)} cm`} />
+              <line x1={bx + bw + dx + 14} y1={by + dy} x2={bx + bw + dx + 14} y2={by + bh + dy} />
+              <line x1={bx + bw + dx + 10} y1={by + dy} x2={bx + bw + dx + 18} y2={by + dy} />
+              <line x1={bx + bw + dx + 10} y1={by + bh + dy} x2={bx + bw + dx + 18} y2={by + bh + dy} />
+              <MeasureTag x={bx + bw + dx + 14} y={by + dy + bh / 2} text={`${Math.round(dev.h * 100)} cm`} />
               <line x1={bx} y1={by - 14} x2={bx + bw} y2={by - 14} />
               <line x1={bx} y1={by - 18} x2={bx} y2={by - 10} />
               <line x1={bx + bw} y1={by - 18} x2={bx + bw} y2={by - 10} />
@@ -200,7 +187,7 @@ export default function ArPreview() {
 
           {/* Outdoor unit inset for the heat pump */}
           {phase >= 3 && mode === 'waermepumpe' && (
-            <g className="ar-fade" transform="translate(150 360)">
+            <g className="ar-fade" transform="translate(152 330)">
               <rect width="118" height="98" rx="10" fill="#221c18" opacity="0.85" />
               <text x="10" y="18" fontSize="10" fill="#f6f1ea" fontWeight="700">
                 + im Garten
@@ -227,7 +214,7 @@ export default function ArPreview() {
             {status}
           </text>
           {phase < 2 && (
-            <g transform="translate(140 400)" className="ar-reticle">
+            <g transform="translate(70 486)" className="ar-reticle">
               <circle r="18" fill="none" stroke="#ffffff" strokeWidth="2" />
               <circle r="3" fill="#ffffff" />
             </g>
