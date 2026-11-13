@@ -1,0 +1,10 @@
+# Secrets and local tooling
+.env
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+
+# Event material from the organisers: not ours to publish
+*.pdf

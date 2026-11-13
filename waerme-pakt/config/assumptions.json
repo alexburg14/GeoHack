@@ -1,0 +1,86 @@
+{
+  "hinweis": "Alle Werte sind Platzhalter für die Hackathon-Demo. Vor echtem Einsatz durch Daten von Geothermie Unterhaching ersetzen.",
+  "allgemein": {
+    "startjahr": {"wert": 2026, "einheit": "", "label": "Startjahr der Rechnung"},
+    "jahre": {"wert": 20, "einheit": "Jahre", "label": "Betrachtungszeitraum"},
+    "zusage_schwelle": {"wert": 0.65, "einheit": "", "label": "Zusage-Schwelle je Straße"}
+  },
+  "waermebedarf": {
+    "warmwasser_kwh_person": {"wert": 700, "einheit": "kWh/Person·a", "label": "Warmwasser pro Person"},
+    "spezifisch": {
+      "label": "Heizwärmebedarf nach Baujahr (kWh/m²·a)",
+      "stufen": [
+        {"bis_baujahr": 1977, "wert": 180},
+        {"bis_baujahr": 1994, "wert": 140},
+        {"bis_baujahr": 2001, "wert": 110},
+        {"bis_baujahr": 2015, "wert": 80},
+        {"bis_baujahr": 9999, "wert": 50}
+      ]
+    },
+    "sanierung_faktor": {
+      "label": "Faktor nach Sanierungsgrad",
+      "werte": {"unsaniert": 1.0, "teilsaniert": 0.85, "vollsaniert": 0.65}
+    }
+  },
+  "bestand": {
+    "gas_arbeitspreis_ct": {"wert": 9.5, "einheit": "ct/kWh", "label": "Gaspreis ohne CO₂-Preis"},
+    "oel_arbeitspreis_ct": {"wert": 9.0, "einheit": "ct/kWh", "label": "Ölpreis ohne CO₂-Preis"},
+    "grundpreis_eur": {"wert": 180, "einheit": "€/Jahr", "label": "Grundpreis Gas/Öl"},
+    "preissteigerung": {"wert": 0.03, "einheit": "pro Jahr", "label": "Preissteigerung Gas/Öl"},
+    "wirkungsgrad": {"wert": 0.9, "einheit": "", "label": "Wirkungsgrad Kessel"},
+    "wartung_eur": {"wert": 220, "einheit": "€/Jahr", "label": "Wartung und Schornsteinfeger"},
+    "kesseltausch_eur": {"wert": 11000, "einheit": "€", "label": "Neuer Kessel"},
+    "kessel_lebensdauer": {"wert": 20, "einheit": "Jahre", "label": "Lebensdauer Kessel"}
+  },
+  "waermepumpe": {
+    "investition_eur": {"wert": 30000, "einheit": "€", "label": "Wärmepumpe inkl. Einbau"},
+    "foerderquote": {"wert": 0.5, "einheit": "", "label": "Förderung (je nach Fall 30–70 %)"},
+    "zusatzkosten_altbau_eur": {"wert": 6000, "einheit": "€", "label": "Heizkörpertausch vor Baujahr 1995"},
+    "altbau_bis_baujahr": {"wert": 1994, "einheit": "", "label": "Zusatzkosten bis Baujahr"},
+    "strompreis_ct": {"wert": 28, "einheit": "ct/kWh", "label": "Wärmepumpen-Strompreis"},
+    "grundpreis_eur": {"wert": 120, "einheit": "€/Jahr", "label": "Grundpreis Strom (Zähler)"},
+    "preissteigerung": {"wert": 0.02, "einheit": "pro Jahr", "label": "Preissteigerung Strom"},
+    "wartung_eur": {"wert": 150, "einheit": "€/Jahr", "label": "Wartung Wärmepumpe"},
+    "jaz": {
+      "label": "Jahresarbeitszahl nach Baujahr",
+      "stufen": [
+        {"bis_baujahr": 1977, "wert": 2.7},
+        {"bis_baujahr": 1994, "wert": 3.0},
+        {"bis_baujahr": 2001, "wert": 3.3},
+        {"bis_baujahr": 2015, "wert": 3.6},
+        {"bis_baujahr": 9999, "wert": 4.0}
+      ]
+    }
+  },
+  "fernwaerme": {
+    "mischpreis_ct": {"wert": 16.43, "einheit": "ct/kWh", "label": "Wärmepreis Unterhaching inkl. Grundpreis", "quelle": "Praxisforum Geothermie Bayern, Pressemitteilung Enerchange 13.02.2026 (Beispiel EFH, 27.000 kWh)"},
+    "anschlusskosten_eur": {"wert": 9000, "einheit": "€", "label": "Hausanschluss und Übergabestation"},
+    "foerderquote": {"wert": 0.3, "einheit": "", "label": "Förderung Anschluss"},
+    "fruehzeichner_rabatt_eur": {"wert": 1500, "einheit": "€", "label": "Rabatt für frühe Zusage"},
+    "preissteigerung": {"wert": 0.02, "einheit": "pro Jahr", "label": "Preissteigerung Fernwärme"},
+    "wartung_eur": {"wert": 60, "einheit": "€/Jahr", "label": "Wartung Übergabestation"}
+  },
+  "co2": {
+    "faktor_gas": {"wert": 0.201, "einheit": "kg/kWh", "label": "CO₂ Erdgas (Brennstoff)"},
+    "faktor_oel": {"wert": 0.266, "einheit": "kg/kWh", "label": "CO₂ Heizöl (Brennstoff)"},
+    "faktor_strom": {"wert": 0.38, "einheit": "kg/kWh", "label": "CO₂ Strommix 2026"},
+    "strom_rueckgang": {"wert": 0.04, "einheit": "pro Jahr", "label": "Rückgang CO₂ im Strommix"},
+    "faktor_geothermie": {"wert": 0.03, "einheit": "kg/kWh", "label": "CO₂ Geothermie-Fernwärme (Pumpstrom)"},
+    "preis_pfad": {
+      "label": "CO₂-Preis (€/t)",
+      "punkte": {"2026": 65, "2027": 80, "2028": 100, "2030": 130, "2035": 180, "2040": 220, "2046": 250}
+    }
+  },
+  "beteiligung": {
+    "zins": {"wert": 0.03, "einheit": "p.a.", "label": "Feste Verzinsung"},
+    "mindestbetrag_eur": {"wert": 500, "einheit": "€", "label": "Mindestbetrag"},
+    "hoechstbetrag_eur": {"wert": 20000, "einheit": "€", "label": "Höchstbetrag"},
+    "laufzeit_jahre": {"wert": 10, "einheit": "Jahre", "label": "Laufzeit"},
+    "waermepreis_rabatt_ct": {"wert": 0.5, "einheit": "ct/kWh", "label": "Wärmepreis-Bonus für Beteiligte"},
+    "rabatt_ab_eur": {"wert": 1000, "einheit": "€", "label": "Bonus ab Beteiligung von"},
+    "netz_investition_eur": {"wert": 40000000, "einheit": "€", "label": "Investition Netzausbau (Demo)"}
+  },
+  "wartegarantie": {
+    "text": "Wer zusagt und dessen Heizung vor dem Anschluss ausfällt, bekommt eine Übergangsheizung (mobile Heizzentrale oder Mietkessel) ohne Investition. Es fallen nur die Verbrauchskosten wie bei Fernwärme an. Die Zusage bleibt bestehen, ein neuer Gaskessel ist nicht nötig."
+  }
+}
