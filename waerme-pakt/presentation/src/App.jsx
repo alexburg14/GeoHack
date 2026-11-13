@@ -204,7 +204,7 @@ export default function App() {
               ['Adresse prüfen:', ' Straße in Bauphase 2, Anschluss voraussichtlich 2029'],
               ['Situation eingeben:', ' 20 Jahre Geothermie, Wärmepumpe und Gas im Vergleich'],
               ['Berater fragen:', ' „Was passiert, wenn meine Heizung vorher kaputtgeht?“'],
-              ['Beteiligen:', ' 2.000 € anlegen und die erwartete Rendite sehen'],
+              ['Beteiligen:', ' Mitglied werden und 10 Jahre weniger für Wärme zahlen'],
               ['„Ich bin dabei“:', ' Die Ottostraße springt von 61 % auf 67 % – über die Schwelle'],
             ].map(([b, rest], i) => (
               <li key={b}>
@@ -295,7 +295,7 @@ export default function App() {
           {[
             ['bars', 'Betreiber-Dashboard', 'Live-Stand je Straße: Wo die Schwelle fast erreicht ist, lohnt sich der nächste Hausbesuch.'],
             ['people', 'Lokale Ansprache', 'Haushalte mit alten Kesseln zuerst – gemeinsam mit Schornsteinfegern und Vereinen vor Ort.'],
-            ['shield', 'Kapital aus dem Ort', 'Bürgerbeteiligung mit fester Verzinsung: Wer mitbesitzt, bleibt – und wirbt Nachbarn.'],
+            ['shield', 'Kapital aus dem Ort', 'Genossenschaft mit Wärmerabatt statt Zinsen: Wer mitbesitzt, bleibt – und wirbt Nachbarn.'],
           ].map(([icon, t, d]) => (
             <div className="card econ-card" key={t} style={{ minHeight: 288 }}>
               <Icon name={icon} />

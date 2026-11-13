@@ -3,6 +3,8 @@
 // so the landing page and the Wärme-Pakt app always show the same results.
 // On top of the Python model: any horizon (e.g. 40 years, with devices replaced at the end of their
 // lifetime) and "what if" overrides for the price factors the user can move on the result page.
+// The Python model has no heat-pump replacement, so the 20-year totals only match while the
+// heat-pump lifetime is at least the 20-year horizon.
 import assumptions from '../../../config/assumptions.json';
 
 const a = assumptions;
@@ -160,6 +162,13 @@ export const LIFETIMES = {
   waermepumpe: base('waermepumpe', 'lebensdauer'),
   bestand: base('bestand', 'kessel_lebensdauer'),
   station: base('fernwaerme', 'station_lebensdauer'),
+};
+
+// What each replacement costs (for the captions of the long-run chart).
+export const REPLACEMENT_EUR = {
+  waermepumpe: base('waermepumpe', 'ersatz_eur'),
+  bestand: base('bestand', 'kesseltausch_eur'),
+  station: base('fernwaerme', 'station_erneuerung_eur'),
 };
 
 export const ASSUMPTIONS_NOTE = a.hinweis;

@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import { STAKE } from '../data/town';
+import {
+  HEAT_PRICE_CT,
+  DISCOUNT_YEARS,
+  DISCOUNT_PCT_PER_SHARE,
+  DISCOUNT_PCT_MAX,
+  EXAMPLE_DEMAND_KWH,
+  memberDiscount,
+} from '../data/genossenschaft';
+import './genossenschaft.css';
 
 // Genossenschaft pitch + calculator, modelled on the Bürgerbeteiligung page of the Wärme-Pakt app.
-// Conditions come from config/assumptions.json ("beteiligung"); all values are demo placeholders.
+// Members are co-owners: they pay in shares and get a discount on their heat price for a fixed period.
+// Share size and limits come from config/assumptions.json ("beteiligung"), the discount rule from
+// data/genossenschaft.js. Everything is a proposal of the team, not agreed with the operator yet.
 const SHARE_EUR = STAKE.mindestbetrag_eur.wert; // one cooperative share = minimum stake
 const MAX_EUR = STAKE.hoechstbetrag_eur.wert;
-const ZINS = STAKE.zins.wert;
-const YEARS = STAKE.laufzeit_jahre.wert;
-const BONUS_CT = STAKE.waermepreis_rabatt_ct.wert;
-const BONUS_FROM = STAKE.rabatt_ab_eur.wert;
 const NETWORK_EUR = STAKE.netz_investition_eur.wert;
+const CAP_EUR = (DISCOUNT_PCT_MAX / DISCOUNT_PCT_PER_SHARE) * SHARE_EUR; // stake that reaches the highest discount
 
 // Demo figures for the pitch (placeholders, not real membership data)
 const DEMO_MEMBERS = 1284;
 const DEMO_RAISED = 7.9e6;
 
 const eur = (n) => `${Math.round(n).toLocaleString('de-DE')} €`;
+const num = (n, digits = 0) => n.toLocaleString('de-DE', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+const pctText = (n) => `${n.toLocaleString('de-DE')} %`;
 const stopKeys = (e) => e.stopPropagation();
 
 export default function GenossenschaftPage({ demandKwh }) {
@@ -23,8 +33,9 @@ export default function GenossenschaftPage({ demandKwh }) {
   const [stage, setStage] = useState('info'); // 'info' | 'confirm' | 'done'
 
   const shares = Math.round(amount / SHARE_EUR);
-  const interest = amount * ZINS;
-  const bonus = amount >= BONUS_FROM && demandKwh ? (demandKwh * BONUS_CT) / 100 : null;
+  const sharesText = `${shares} ${shares === 1 ? 'Anteil' : 'Anteile'}`;
+  const ownDemand = Boolean(demandKwh);
+  const discount = memberDiscount(shares, ownDemand ? demandKwh : EXAMPLE_DEMAND_KWH);
   const setClamped = (v) => setAmount(Math.min(MAX_EUR, Math.max(SHARE_EUR, Math.round(Number(v) / SHARE_EUR) * SHARE_EUR || SHARE_EUR)));
 
   return (
@@ -34,8 +45,8 @@ export default function GenossenschaftPage({ demandKwh }) {
           <p className="eyebrow">Wärme-Genossenschaft Starnberg</p>
           <h1>Das Netz gehört denen, die es nutzen</h1>
           <p>
-            Als Mitglied der Genossenschaft finanzieren Sie das Geothermie-Netz vor Ihrer Haustür mit, bestimmen mit und
-            bekommen feste Zinsen und günstigere Wärme. Ihr Geld bleibt im Ort.
+            Als Mitglied gehört Ihnen ein Stück des Geothermie-Netzes vor Ihrer Haustür. Sie bestimmen mit und zahlen{' '}
+            {DISCOUNT_YEARS} Jahre lang weniger für Ihre Wärme. Ihr Geld bleibt im Ort.
           </p>
         </div>
         <div className="ep-coop-progress">
@@ -52,9 +63,13 @@ export default function GenossenschaftPage({ demandKwh }) {
 
       <div className="ep-grid3">
         {[
+          [
+            '🔥',
+            `${pctText(DISCOUNT_PCT_PER_SHARE)} Rabatt pro Anteil`,
+            `Auf Ihren Wärmepreis, bis höchstens ${pctText(DISCOUNT_PCT_MAX)}. ${DISCOUNT_YEARS} Jahre lang, direkt auf der Wärmerechnung.`,
+          ],
+          ['🏠', 'Ihre Einlage bleibt Ihr Eigentum', 'Sie kaufen Anteile am Netz, kein Finanzprodukt. Beim Austritt erhalten Sie Ihre Einlage zurück.'],
           ['🗳️', 'Ein Mitglied, eine Stimme', 'Egal wie viele Anteile: Jedes Mitglied entscheidet in der Generalversammlung mit, auch über die Wärmepreise.'],
-          ['📈', `${(ZINS * 100).toLocaleString('de-DE')} % feste Verzinsung`, `Über ${YEARS} Jahre Laufzeit, planbar und unabhängig vom Börsenkurs.`],
-          ['🔥', `${BONUS_CT.toLocaleString('de-DE')} ct/kWh günstigere Wärme`, `Für alle Mitglieder ab ${eur(BONUS_FROM)} Einlage, jedes Jahr auf die Heizrechnung.`],
         ].map(([emoji, title, text]) => (
           <div key={title} className="ep-card ep-info">
             <span className="emoji">{emoji}</span>
@@ -70,7 +85,7 @@ export default function GenossenschaftPage({ demandKwh }) {
         <div className="ep-card">
           <h2>Ihr Beitrag</h2>
           <label className="field" htmlFor="coop-amount">
-            Einlage ({shares} {shares === 1 ? 'Anteil' : 'Anteile'} à {eur(SHARE_EUR)})
+            Einlage ({sharesText} à {eur(SHARE_EUR)})
           </label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
             <input
@@ -100,24 +115,37 @@ export default function GenossenschaftPage({ demandKwh }) {
             <span>€</span>
           </div>
 
-          <div className="ep-kpis two" style={{ margin: '18px 0' }}>
+          <div className="ep-coop-benefit">
+            <h3>Ihr Vorteil als Mitglied</h3>
+            <span className="ep-coop-tag">Vorschlag</span>
+          </div>
+          <div className="ep-kpis two">
             <div className="ep-kpi">
-              <small>Zinsen pro Jahr</small>
-              <b>{eur(interest)}</b>
+              <small>Rabatt auf Ihren Wärmepreis</small>
+              <b>{pctText(discount.pct)}</b>
+              <small className="sub">{discount.capped ? 'Höchstrabatt erreicht' : `${DISCOUNT_YEARS} Jahre lang`}</small>
             </div>
             <div className="ep-kpi">
-              <small>Zinsen in {YEARS} Jahren</small>
-              <b>{eur(interest * YEARS)}</b>
+              <small>Ihr Wärmepreis</small>
+              <b>{num(discount.priceCt, 2)} ct</b>
+              <small className="sub">pro kWh statt {num(HEAT_PRICE_CT, 2)} ct</small>
             </div>
-            <div className="ep-kpi">
-              <small>Wärmepreis-Bonus pro Jahr</small>
-              <b>{amount < BONUS_FROM ? `ab ${eur(BONUS_FROM)}` : bonus === null ? 'nach Schritt 2' : eur(bonus)}</b>
+            <div className="ep-kpi save">
+              <small>Ersparnis pro Jahr</small>
+              <b>{eur(discount.perYear)}</b>
             </div>
-            <div className="ep-kpi">
-              <small>Ihr Anteil am Netz</small>
-              <b>{((amount / NETWORK_EUR) * 100).toLocaleString('de-DE', { maximumFractionDigits: 4 })} %</b>
+            <div className="ep-kpi save">
+              <small>Ersparnis über {DISCOUNT_YEARS} Jahre</small>
+              <b>{eur(discount.total)}</b>
             </div>
           </div>
+          <p className="ep-coop-basis">
+            {ownDemand
+              ? `Berechnet mit Ihrem Wärmebedarf von ${num(demandKwh)} kWh pro Jahr und dem heutigen Wärmepreis.`
+              : `Beispiel für ein Haus mit ${num(EXAMPLE_DEMAND_KWH)} kWh Wärmebedarf pro Jahr. Ihre eigenen Zahlen sehen Sie hier, sobald Sie unter „Rechnen“ Ihr Haus berechnet haben.`}
+            {amount > CAP_EUR &&
+              ` Ab ${eur(CAP_EUR)} Einlage steigt der Rabatt nicht weiter, Ihr Anteil am Netz schon.`}
+          </p>
 
           {stage === 'info' && (
             <button type="button" className="ep-btn primary" style={{ width: '100%' }} onClick={() => setStage('confirm')}>
@@ -127,7 +155,10 @@ export default function GenossenschaftPage({ demandKwh }) {
           {stage === 'confirm' && (
             <div className="ep-confirm">
               <p>
-                <strong>{eur(amount)}</strong> Einlage ({shares} Anteile) in der Wärme-Genossenschaft Starnberg
+                <strong>{eur(amount)}</strong> Einlage ({sharesText}) in der Wärme-Genossenschaft Starnberg
+              </p>
+              <p style={{ marginTop: 2 }}>
+                Dafür: {pctText(discount.pct)} Rabatt auf Ihren Wärmepreis, {DISCOUNT_YEARS} Jahre lang.
               </p>
               <p className="muted" style={{ fontSize: 12.5, margin: '4px 0 12px' }}>
                 Demo: Hier würden Beitrittserklärung und SEPA-Lastschrift folgen. Es wird nichts abgebucht.
@@ -146,7 +177,8 @@ export default function GenossenschaftPage({ demandKwh }) {
             <div className="ep-confirm ok">
               <strong>Willkommen in der Genossenschaft!</strong>
               <p className="muted" style={{ fontSize: 13, marginTop: 4 }}>
-                Mitglied Nr. {(DEMO_MEMBERS + 1).toLocaleString('de-DE')} · {eur(amount)} Einlage (Demo)
+                Mitglied Nr. {(DEMO_MEMBERS + 1).toLocaleString('de-DE')} · {eur(amount)} Einlage · {pctText(discount.pct)} Wärmerabatt für{' '}
+                {DISCOUNT_YEARS} Jahre (Demo)
               </p>
             </div>
           )}
@@ -159,7 +191,7 @@ export default function GenossenschaftPage({ demandKwh }) {
               <span className="n">1</span>
               <div>
                 <strong>Anteile zeichnen</strong>
-                <p>Ab {eur(SHARE_EUR)} pro Anteil, bis {eur(MAX_EUR)} pro Haushalt.</p>
+                <p>Ab {eur(SHARE_EUR)} pro Anteil, bis {eur(MAX_EUR)} pro Haushalt. Damit sind Sie Miteigentümer.</p>
               </div>
             </li>
             <li>
@@ -172,22 +204,31 @@ export default function GenossenschaftPage({ demandKwh }) {
             <li>
               <span className="n">3</span>
               <div>
-                <strong>Zinsen und günstigere Wärme</strong>
+                <strong>{DISCOUNT_YEARS} Jahre günstigere Wärme</strong>
                 <p>
-                  {(ZINS * 100).toLocaleString('de-DE')} % pro Jahr auf Ihre Einlage, dazu der Wärmepreis-Bonus auf Ihre Rechnung.
+                  {pctText(DISCOUNT_PCT_PER_SHARE)} Rabatt pro Anteil auf Ihren Wärmepreis, höchstens {pctText(DISCOUNT_PCT_MAX)} (ab{' '}
+                  {eur(CAP_EUR)} Einlage). Der Rabatt gilt ab Ihrem Anschluss.
                 </p>
               </div>
             </li>
             <li>
               <span className="n">4</span>
               <div>
-                <strong>Mitbestimmen</strong>
-                <p>Eine Stimme in der Generalversammlung, Einblick in Preise und Ausbauplan.</p>
+                <strong>Mitbestimmen und Miteigentümer bleiben</strong>
+                <p>Eine Stimme in der Generalversammlung, Einblick in Preise und Ausbauplan, auch nach den {DISCOUNT_YEARS} Jahren.</p>
               </div>
             </li>
           </ol>
+          <div className="ep-coop-own">
+            <span className="emoji">🏠</span>
+            <p>
+              <strong>Und Ihre Einlage?</strong> Sie bleibt Ihr Anteil am Netz. Treten Sie aus der Genossenschaft aus, wird sie
+              zurückgezahlt. Sie ist Eigenkapital der Genossenschaft, keine Spareinlage.
+            </p>
+          </div>
           <p className="muted" style={{ fontSize: 12, marginTop: 14 }}>
-            Demo: Konditionen und Mitgliederzahlen sind Platzhalter, es findet keine echte Zahlung statt.
+            Vorschlag des Teams, noch nicht mit dem Betreiber abgestimmt: Rabatt, Laufzeit und Rückzahlung der Einlage sind
+            Platzhalter. Demo: Mitgliederzahlen sind erfunden, es findet keine echte Zahlung statt.
           </p>
         </div>
       </div>

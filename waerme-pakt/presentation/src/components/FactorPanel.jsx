@@ -74,7 +74,7 @@ export default function FactorPanel({ factors, setFactors, defaultJaz, result, b
           <div className="ep-lock">
             <span aria-hidden="true">🔒</span>
             <p>
-              <b>Geothermie-Wärmepreis: {pct(FACTOR_DEFAULTS['fernwaerme.preissteigerung'])} pro Jahr.</b> Die Wärme kommt
+              <b>Geothermie-Wärmepreis: +{pct(FACTOR_DEFAULTS['fernwaerme.preissteigerung'])} pro Jahr.</b> Die Wärme kommt
               aus der Tiefe unter Starnberg, nicht von der Gas- oder Strombörse.
               <br />
               <small className="muted">Annahme: hängt an der Preisgleitklausel, mit dem Betreiber zu prüfen.</small>

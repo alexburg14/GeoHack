@@ -377,7 +377,7 @@
 .ar-drop { animation: arDrop 0.7s cubic-bezier(.2, .9, .3, 1.2) both; transform-box: fill-box; transform-origin: center bottom; }
 @keyframes arDrop { from { opacity: 0; transform: translateY(-40px) scale(0.9); } }
 .ar-measure line { stroke-dasharray: 300; animation: arDraw 0.8s ease-out both; }
-.ar-measure g { animation: arFade 0.4s 0.5s ease-out both; }
+.ar-measure g, .ar-measure polyline { animation: arFade 0.4s 0.5s ease-out both; }
 @keyframes arDraw { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }
 .ar-reticle { animation: arPulse 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes arPulse { 50% { opacity: 0.5; } }

@@ -41,14 +41,14 @@
     "grundpreis_eur": {"wert": 120, "einheit": "€/Jahr", "label": "Grundpreis Strom (Zähler)"},
     "preissteigerung": {"wert": 0.03, "einheit": "pro Jahr", "label": "Preissteigerung Strom (steigende Netzentgelte)", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
     "wartung_eur": {"wert": 150, "einheit": "€/Jahr", "label": "Wartung Wärmepumpe"},
-    "lebensdauer": {"wert": 15, "einheit": "Jahre", "label": "Lebensdauer Wärmepumpe", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
+    "lebensdauer": {"wert": 20, "einheit": "Jahre", "label": "Lebensdauer Wärmepumpe (üblich 15–20 Jahre)"},
     "ersatz_eur": {"wert": 20000, "einheit": "€", "label": "Neues Gerät nach Ende der Lebensdauer (ohne Förderung)"},
     "jaz": {
       "label": "Jahresarbeitszahl nach Baujahr",
-      "quelle": "Bis Baujahr 1994 gesenkt (Heizkörper, hohe Vorlauftemperatur): Expertenrunde Hackathon 13.11.2026, zu bestätigen",
+      "quelle": "Bis Baujahr 1977: 2,5 (Heizkörper, hohe Vorlauftemperatur), Expertenrunde Hackathon 13.11.2026, zu bestätigen. Baujahr 1978–1994: 2,9 als eigene Annahme vom 14.11.2026 (Expertenrunde nannte 2,7, vorher 3,0), weil der Heizkörpertausch hier schon als Zusatzkosten eingerechnet ist; zu bestätigen",
       "stufen": [
         {"bis_baujahr": 1977, "wert": 2.5},
-        {"bis_baujahr": 1994, "wert": 2.7},
+        {"bis_baujahr": 1994, "wert": 2.9},
         {"bis_baujahr": 2001, "wert": 3.3},
         {"bis_baujahr": 2015, "wert": 3.6},
         {"bis_baujahr": 9999, "wert": 4.0}
