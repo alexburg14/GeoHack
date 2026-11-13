@@ -1,15 +1,21 @@
 // 20-year cost and CO₂ comparison: JavaScript port of waerme-pakt/lib/cost_model.py (Alex's model).
 // All numbers come from waerme-pakt/config/assumptions.json, the same file the Python app uses,
 // so the landing page and the Wärme-Pakt app always show the same results.
+// On top of the Python model: any horizon (e.g. 40 years, with devices replaced at the end of their
+// lifetime) and "what if" overrides for the price factors the user can move on the result page.
 import assumptions from '../../../config/assumptions.json';
 
 const a = assumptions;
-const v = (group, key) => a[group][key].wert;
+const base = (group, key) => a[group][key].wert;
+
+// Overrides set by compare(); keys are "group.key", e.g. "waermepumpe.strompreis_ct".
+let overrides = {};
+const v = (group, key) => overrides[`${group}.${key}`] ?? base(group, key);
 
 const lookupByYear = (stufen, baujahr) => (stufen.find((s) => baujahr <= s.bis_baujahr) || stufen[stufen.length - 1]).wert;
 
 export const START_YEAR = v('allgemein', 'startjahr');
-export const YEARS = v('allgemein', 'jahre');
+export const YEARS = base('allgemein', 'jahre');
 
 export function connectionYear(text) {
   const m = String(text || '').match(/(19|20)\d\d/);
@@ -52,74 +58,108 @@ function summary(yearly, invest, co2Kg) {
   return { gesamt_eur: Math.round(total), investition_eur: Math.round(invest), kumuliert_eur: cumulative, co2_t: Math.round(co2Kg / 100) / 10 };
 }
 
-function scenarioKeep(inputs, demand) {
+function scenarioKeep(inputs, demand, years) {
   const lifetime = v('bestand', 'kessel_lebensdauer');
   const yearly = [];
   let co2Kg = 0;
   let invest = 0;
-  let replaced = false;
-  for (let i = 0; i < YEARS; i += 1) {
+  let age = inputs.heizungsalter;
+  for (let i = 0; i < years; i += 1) {
     let [cost, co2] = fossilYear(inputs, demand, i);
-    if (!replaced && inputs.heizungsalter + i >= lifetime) {
+    if (age >= lifetime) {
       cost += v('bestand', 'kesseltausch_eur');
       invest += v('bestand', 'kesseltausch_eur');
-      replaced = true;
+      age = 0;
     }
+    age += 1;
     yearly.push(cost);
     co2Kg += co2;
   }
   return summary(yearly, invest, co2Kg);
 }
 
-function scenarioHeatPump(inputs, demand) {
+function scenarioHeatPump(inputs, demand, years) {
   const w = 'waermepumpe';
   let invest = v(w, 'investition_eur') * (1 - v(w, 'foerderquote'));
   if (inputs.baujahr <= v(w, 'altbau_bis_baujahr')) invest += v(w, 'zusatzkosten_altbau_eur');
-  const powerKwh = demand / lookupByYear(a[w].jaz.stufen, inputs.baujahr);
+  const powerKwh = demand / jaz(inputs);
+  const lifetime = v(w, 'lebensdauer');
   const yearly = [];
   let co2Kg = 0;
-  for (let i = 0; i < YEARS; i += 1) {
+  for (let i = 0; i < years; i += 1) {
     const priceCt = v(w, 'strompreis_ct') * (1 + v(w, 'preissteigerung')) ** i;
     const cost = (powerKwh * priceCt) / 100 + v(w, 'grundpreis_eur') + v(w, 'wartung_eur');
-    yearly.push(cost + (i === 0 ? invest : 0));
+    const replacement = i > 0 && i % lifetime === 0 ? v(w, 'ersatz_eur') : 0;
+    if (replacement) invest += replacement;
+    yearly.push(cost + (i === 0 ? invest : 0) + replacement);
     co2Kg += powerKwh * v('co2', 'faktor_strom') * (1 - v('co2', 'strom_rueckgang')) ** i;
   }
   return summary(yearly, invest, co2Kg);
 }
 
 // Keep the old boiler until the connection year, then geothermal district heating.
-function scenarioDistrict(inputs, demand, connYear) {
+function scenarioDistrict(inputs, demand, connYear, years) {
   const f = 'fernwaerme';
   const k = Math.max(0, connYear - START_YEAR);
   const invest = Math.max(0, v(f, 'anschlusskosten_eur') * (1 - v(f, 'foerderquote')) - v(f, 'fruehzeichner_rabatt_eur'));
   const yearly = [];
   let co2Kg = 0;
-  for (let i = 0; i < YEARS; i += 1) {
+  const renewalYear = k + v(f, 'station_lebensdauer');
+  let renewals = 0;
+  for (let i = 0; i < years; i += 1) {
     if (i < k) {
       const [cost, co2] = fossilYear(inputs, demand, i);
       yearly.push(cost);
       co2Kg += co2;
     } else {
       const priceCt = v(f, 'mischpreis_ct') * (1 + v(f, 'preissteigerung')) ** i;
-      yearly.push((demand * priceCt) / 100 + v(f, 'wartung_eur') + (i === k ? invest : 0));
+      const renewal = i === renewalYear ? v(f, 'station_erneuerung_eur') : 0;
+      renewals += renewal;
+      yearly.push((demand * priceCt) / 100 + v(f, 'wartung_eur') + (i === k ? invest : 0) + renewal);
       co2Kg += demand * v('co2', 'faktor_geothermie');
     }
   }
-  return { ...summary(yearly, invest, co2Kg), jahre_bis_anschluss: k };
+  return { ...summary(yearly, invest + renewals, co2Kg), jahre_bis_anschluss: k };
 }
 
-export function compare(inputs, connYear) {
-  const demand = heatDemandKwh(inputs);
-  return {
-    waermebedarf_kwh: Math.round(demand),
-    jahre: Array.from({ length: YEARS }, (_, i) => START_YEAR + i),
-    anschlussjahr: connYear,
-    optionen: {
-      fernwaerme: scenarioDistrict(inputs, demand, connYear),
-      waermepumpe: scenarioHeatPump(inputs, demand),
-      bestand: scenarioKeep(inputs, demand),
-    },
-  };
+// Seasonal performance of the heat pump: from the building year unless the user moved the slider.
+export function jaz(inputs) {
+  return overrides['waermepumpe.jaz'] ?? lookupByYear(a.waermepumpe.jaz.stufen, inputs.baujahr);
 }
+
+// The factors the result page lets users move, with their defaults from assumptions.json.
+export const FACTOR_DEFAULTS = {
+  'waermepumpe.strompreis_ct': base('waermepumpe', 'strompreis_ct'),
+  'waermepumpe.preissteigerung': base('waermepumpe', 'preissteigerung'),
+  'bestand.preissteigerung': base('bestand', 'preissteigerung'),
+  'fernwaerme.preissteigerung': base('fernwaerme', 'preissteigerung'),
+};
+
+export function compare(inputs, connYear, { years = YEARS, factors = {} } = {}) {
+  overrides = factors;
+  try {
+    const demand = heatDemandKwh(inputs);
+    return {
+      waermebedarf_kwh: Math.round(demand),
+      jahre: Array.from({ length: years }, (_, i) => START_YEAR + i),
+      anschlussjahr: connYear,
+      jaz: jaz(inputs),
+      optionen: {
+        fernwaerme: scenarioDistrict(inputs, demand, connYear, years),
+        waermepumpe: scenarioHeatPump(inputs, demand, years),
+        bestand: scenarioKeep(inputs, demand, years),
+      },
+    };
+  } finally {
+    overrides = {};
+  }
+}
+
+// Years in which a device is replaced (for markers on the long-run chart).
+export const LIFETIMES = {
+  waermepumpe: base('waermepumpe', 'lebensdauer'),
+  bestand: base('bestand', 'kessel_lebensdauer'),
+  station: base('fernwaerme', 'station_lebensdauer'),
+};
 
 export const ASSUMPTIONS_NOTE = a.hinweis;

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import CostChart from './CostChart';
+import ArPreview from './ArPreview';
+import FactorPanel from './FactorPanel';
+import LongRunStory from './LongRunStory';
 import NeighborhoodPage from './NeighborhoodPage';
 import GuaranteeSlides from './GuaranteeSlides';
 import GenossenschaftPage from './GenossenschaftPage';
@@ -86,6 +88,8 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
   const [currentHeating, setCurrentHeating] = useState('gas');
   const [heatingAge, setHeatingAge] = useState('17');
   const [hasResult, setHasResult] = useState(false);
+  // "What if" price factors from the result page (empty = assumptions.json).
+  const [factors, setFactors] = useState({});
   const [requestSent, setRequestSent] = useState(false);
 
   const addressOk = isAddressComplete(street, houseNo, zipCode);
@@ -145,7 +149,9 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
     sanierung: renovation,
   };
   const conn = expectedConnection(matchedStreet);
-  const result = compare(inputs, conn.year);
+  const result = compare(inputs, conn.year, { factors });
+  const baseline = compare(inputs, conn.year);
+  const longRun = compare(inputs, conn.year, { years: 40, factors });
   const optionKeys = ['fernwaerme', 'waermepumpe', 'bestand'];
   const cheapest = optionKeys.reduce((x, y) => (result.optionen[x].gesamt_eur <= result.optionen[y].gesamt_eur ? x : y));
   const cleanest = optionKeys.reduce((x, y) => (result.optionen[x].co2_t <= result.optionen[y].co2_t ? x : y));
@@ -480,16 +486,28 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
               })}
             </div>
 
-            <div className="ep-split">
-              <div className="ep-card">
-                <h2 style={{ marginBottom: 12 }}>Kosten über die Jahre (aufsummiert)</h2>
-                <CostChart
-                  years={result.jahre}
-                  series={optionKeys.map((k) => ({ ...OPTION_META[k], label: optionLabel(k), data: result.optionen[k].kumuliert_eur }))}
-                />
-              </div>
-              <div className="ep-card">
-                <h2 style={{ marginBottom: 12 }}>Der Preis allein sagt nichts</h2>
+            <FactorPanel
+              factors={factors}
+              setFactors={setFactors}
+              defaultJaz={baseline.jaz}
+              result={result}
+              baseline={baseline}
+              keys={optionKeys}
+              meta={OPTION_META}
+              label={optionLabel}
+            />
+
+            <LongRunStory
+              scrollRoot={mainRef}
+              result={longRun}
+              keys={optionKeys}
+              meta={OPTION_META}
+              label={optionLabel}
+              heatingAge={inputs.heizungsalter}
+            />
+
+            <div className="ep-card">
+              <h2 style={{ marginBottom: 12 }}>Der Preis allein sagt nichts</h2>
                 <table className="ep-facts">
                   <thead>
                     <tr>
@@ -509,8 +527,9 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                     ))}
                   </tbody>
                 </table>
-              </div>
             </div>
+
+            <ArPreview />
 
             <p className="muted" style={{ fontSize: 12.5 }}>{ASSUMPTIONS_NOTE}</p>
 
