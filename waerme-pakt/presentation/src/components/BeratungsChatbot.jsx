@@ -50,16 +50,16 @@ export default function BeratungsChatbot() {
       style={{
         marginTop: '20px',
         backgroundColor: '#ffffff',
-        border: '1px solid #cbd5e1',
+        border: '1px solid #cfc2b1',
         borderRadius: '16px',
         overflow: 'hidden',
-        boxShadow: '0 6px 20px rgba(15, 23, 42, 0.06)',
+        boxShadow: '0 6px 20px rgba(34, 28, 24, 0.06)',
       }}
     >
       {/* Chat Header */}
       <div
         style={{
-          backgroundColor: '#091e2c',
+          backgroundColor: '#221c18',
           color: '#ffffff',
           padding: '10px 16px',
           display: 'flex',
@@ -73,8 +73,8 @@ export default function BeratungsChatbot() {
               width: '26px',
               height: '26px',
               borderRadius: '50%',
-              backgroundColor: '#f59e0b',
-              color: '#091e2c',
+              backgroundColor: '#e8763a',
+              color: '#221c18',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -85,17 +85,17 @@ export default function BeratungsChatbot() {
           </span>
           <div>
             <div style={{ fontSize: '13.5px', fontWeight: 700 }}>EnergiePlus Beratungs-Chat</div>
-            <div style={{ fontSize: '11px', color: '#99f6e4' }}>● Online • Sofortige Antworten</div>
+            <div style={{ fontSize: '11px', color: '#f2c3a6' }}>● Online • Sofortige Antworten</div>
           </div>
         </div>
-        <span style={{ fontSize: '11px', color: '#cbd5e1' }}>KI-Assistent</span>
+        <span style={{ fontSize: '11px', color: '#cfc2b1' }}>KI-Assistent</span>
       </div>
 
       {/* Messages List */}
       <div
         style={{
           padding: '14px 16px',
-          backgroundColor: '#f8fafc',
+          backgroundColor: '#f6f1ea',
           display: 'flex',
           flexDirection: 'column',
           gap: '8px',
@@ -111,9 +111,9 @@ export default function BeratungsChatbot() {
               style={{
                 alignSelf: isBot ? 'flex-start' : 'flex-end',
                 maxWidth: '80%',
-                backgroundColor: isBot ? '#ffffff' : '#091e2c',
-                color: isBot ? '#0f172a' : '#ffffff',
-                border: isBot ? '1px solid #e2e8f0' : 'none',
+                backgroundColor: isBot ? '#ffffff' : '#221c18',
+                color: isBot ? '#221c18' : '#ffffff',
+                border: isBot ? '1px solid #dcd0c1' : 'none',
                 borderRadius: isBot ? '12px 12px 12px 4px' : '12px 12px 4px 12px',
                 padding: '8px 12px',
                 fontSize: '13px',
@@ -142,9 +142,9 @@ export default function BeratungsChatbot() {
             type="button"
             onClick={() => sendMessage(q)}
             style={{
-              border: '1px solid #cbd5e1',
-              backgroundColor: '#f8fafc',
-              color: '#0f172a',
+              border: '1px solid #cfc2b1',
+              backgroundColor: '#f6f1ea',
+              color: '#221c18',
               borderRadius: '999px',
               padding: '4px 10px',
               fontSize: '11.5px',
@@ -181,7 +181,7 @@ export default function BeratungsChatbot() {
             flex: 1,
             padding: '8px 12px',
             borderRadius: '8px',
-            border: '1px solid #cbd5e1',
+            border: '1px solid #cfc2b1',
             fontSize: '13px',
             outline: 'none',
           }}
@@ -191,8 +191,8 @@ export default function BeratungsChatbot() {
           style={{
             border: 'none',
             borderRadius: '8px',
-            backgroundColor: '#f59e0b',
-            color: '#091e2c',
+            backgroundColor: '#e8763a',
+            color: '#221c18',
             padding: '8px 14px',
             fontSize: '13px',
             fontWeight: 700,

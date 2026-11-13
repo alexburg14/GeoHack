@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const STREETS = [
+export const STREETS = [
   {
     id: 'sonnenallee',
     name: 'Sonnenallee',
@@ -57,10 +57,10 @@ const STREETS = [
   },
 ];
 
-const STATUS_META = {
-  planned: { label: 'Geplant', color: '#10b981', bg: '#d1fae5', text: '#065f46' },
-  interested: { label: 'Interessiert', color: '#f59e0b', bg: '#fef3c7', text: '#92400e' },
-  unplanned: { label: 'Nicht geplant', color: '#94a3b8', bg: '#f1f5f9', text: '#475569' },
+export const STATUS_META = {
+  planned: { label: 'Geplant', color: '#bf4416', bg: '#fce9dc', text: '#8a3210' },
+  interested: { label: 'Interessiert', color: '#e8763a', bg: '#fdeee2', text: '#8a3210' },
+  unplanned: { label: 'Nicht geplant', color: '#9a8e84', bg: '#ece3d7', text: '#5a4e45' },
 };
 
 export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
@@ -73,7 +73,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
   const effectivePct = Math.min(100, selectedStreet.interestedPct + (isPledged ? 6 : 0));
 
   const getStreetColor = (street) => {
-    if (filter !== 'all' && street.status !== filter) return '#e2e8f0';
+    if (filter !== 'all' && street.status !== filter) return '#dcd0c1';
     return STATUS_META[street.status].color;
   };
 
@@ -86,7 +86,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
     <div
       style={{
         backgroundColor: '#ffffff',
-        border: '1px solid #e2e8f0',
+        border: '1px solid #dcd0c1',
         borderRadius: '16px',
         padding: '18px 20px',
       }}
@@ -102,10 +102,10 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
         }}
       >
         <div>
-          <h3 style={{ margin: 0, fontSize: '18px', color: '#091e2c' }}>
+          <h3 style={{ margin: 0, fontSize: '18px', color: '#221c18' }}>
             🏘️ Musterquartier: Netzausbau &amp; Nachbarschafts-Interesse
           </h3>
-          <p style={{ margin: '2px 0 0 0', fontSize: '12.5px', color: '#64748b' }}>
+          <p style={{ margin: '2px 0 0 0', fontSize: '12.5px', color: '#7a6e65' }}>
             Klicken Sie auf eine Straße, um Ausbaustatus und Haushalts-Interesse zu prüfen.
           </p>
         </div>
@@ -114,9 +114,9 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {[
             { id: 'all', label: 'Alle Straßen' },
-            { id: 'planned', label: '● Geplant', dot: '#10b981' },
-            { id: 'interested', label: '● Interessiert', dot: '#f59e0b' },
-            { id: 'unplanned', label: '● Nicht geplant', dot: '#94a3b8' },
+            { id: 'planned', label: '● Geplant', dot: '#bf4416' },
+            { id: 'interested', label: '● Interessiert', dot: '#e8763a' },
+            { id: 'unplanned', label: '● Nicht geplant', dot: '#9a8e84' },
           ].map((f) => {
             const active = filter === f.id;
             return (
@@ -125,9 +125,9 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                 type="button"
                 onClick={() => setFilter(f.id)}
                 style={{
-                  border: active ? '1px solid #091e2c' : '1px solid #cbd5e1',
-                  backgroundColor: active ? '#091e2c' : '#f8fafc',
-                  color: active ? '#ffffff' : f.dot || '#334155',
+                  border: active ? '1px solid #221c18' : '1px solid #cfc2b1',
+                  backgroundColor: active ? '#221c18' : '#f6f1ea',
+                  color: active ? '#ffffff' : f.dot || '#3a302a',
                   borderRadius: '999px',
                   padding: '5px 11px',
                   fontSize: '12px',
@@ -153,8 +153,8 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
         {/* Interactive SVG Neighborhood Map */}
         <div
           style={{
-            backgroundColor: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            backgroundColor: '#f6f1ea',
+            border: '1px solid #dcd0c1',
             borderRadius: '12px',
             padding: '10px',
             position: 'relative',
@@ -162,17 +162,17 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
         >
           <svg viewBox="0 0 520 290" style={{ width: '100%', height: 'auto', display: 'block' }}>
             {/* Park / Green Zone */}
-            <rect x="195" y="95" width="130" height="92" rx="14" fill="#dcfce7" stroke="#bbf7d0" />
-            <text x="260" y="145" textAnchor="middle" fontSize="11" fill="#15803d" fontWeight="600">
+            <rect x="195" y="95" width="130" height="92" rx="14" fill="#fce9dc" stroke="#f1c9ae" />
+            <text x="260" y="145" textAnchor="middle" fontSize="11" fill="#a63a12" fontWeight="600">
               🌳 Stadtpark
             </text>
 
             {/* Heating Plant / Heizwerk */}
-            <rect x="16" y="18" width="92" height="44" rx="8" fill="#091e2c" />
-            <text x="62" y="38" textAnchor="middle" fontSize="10" fill="#f59e0b" fontWeight="700">
+            <rect x="16" y="18" width="92" height="44" rx="8" fill="#221c18" />
+            <text x="62" y="38" textAnchor="middle" fontSize="10" fill="#e8763a" fontWeight="700">
               🔥 HEIZWERK
             </text>
-            <text x="62" y="52" textAnchor="middle" fontSize="9" fill="#cbd5e1">
+            <text x="62" y="52" textAnchor="middle" fontSize="9" fill="#cfc2b1">
               Haupttrasse
             </text>
 
@@ -190,11 +190,11 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                 strokeWidth={selectedId === 'sonnenallee' ? 16 : 12}
                 strokeLinecap="round"
               />
-              <text x="280" y="28" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0f172a">
+              <text x="280" y="28" textAnchor="middle" fontSize="11" fontWeight="700" fill="#221c18">
                 Sonnenallee (84% ✓)
               </text>
               {[150, 200, 250, 310, 360, 410, 460].map((x) => (
-                <rect key={x} x={x - 7} y="54" width="14" height="11" rx="2" fill="#10b981" />
+                <rect key={x} x={x - 7} y="54" width="14" height="11" rx="2" fill="#bf4416" />
               ))}
             </g>
 
@@ -218,13 +218,13 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                 textAnchor="middle"
                 fontSize="11"
                 fontWeight="700"
-                fill="#0f172a"
+                fill="#221c18"
                 transform="rotate(-90 118 155)"
               >
                 Gartenstraße (78% ✓)
               </text>
               {[90, 130, 170, 210].map((y) => (
-                <rect key={y} x="157" y={y - 6} width="12" height="12" rx="2" fill="#10b981" />
+                <rect key={y} x="157" y={y - 6} width="12" height="12" rx="2" fill="#bf4416" />
               ))}
             </g>
 
@@ -248,7 +248,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                 textAnchor="middle"
                 fontSize="11"
                 fontWeight="700"
-                fill="#0f172a"
+                fill="#221c18"
                 transform="rotate(-90 392 148)"
               >
                 Eichenweg (58%)
@@ -261,7 +261,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                   width="12"
                   height="12"
                   rx="2"
-                  fill={idx < 3 ? '#f59e0b' : '#cbd5e1'}
+                  fill={idx < 3 ? '#e8763a' : '#cfc2b1'}
                 />
               ))}
             </g>
@@ -280,7 +280,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                 strokeWidth={selectedId === 'lindenplatz' ? 16 : 12}
                 strokeLinecap="round"
               />
-              <text x="255" y="260" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0f172a">
+              <text x="255" y="260" textAnchor="middle" fontSize="11" fontWeight="700" fill="#221c18">
                 Lindenplatz (52%)
               </text>
               {[185, 225, 265, 305].map((x, idx) => (
@@ -291,7 +291,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                   width="12"
                   height="11"
                   rx="2"
-                  fill={idx < 2 ? '#f59e0b' : '#cbd5e1'}
+                  fill={idx < 2 ? '#e8763a' : '#cfc2b1'}
                 />
               ))}
             </g>
@@ -316,7 +316,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                 textAnchor="middle"
                 fontSize="11"
                 fontWeight="700"
-                fill="#475569"
+                fill="#5a4e45"
                 transform="rotate(-90 496 150)"
               >
                 Birkenallee (18%)
@@ -329,7 +329,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                   width="12"
                   height="12"
                   rx="2"
-                  fill={idx === 0 ? '#f59e0b' : '#cbd5e1'}
+                  fill={idx === 0 ? '#e8763a' : '#cfc2b1'}
                 />
               ))}
             </g>
@@ -348,7 +348,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                 strokeWidth={selectedId === 'muehlenweg' ? 16 : 12}
                 strokeLinecap="round"
               />
-              <text x="418" y="260" textAnchor="middle" fontSize="11" fontWeight="700" fill="#475569">
+              <text x="418" y="260" textAnchor="middle" fontSize="11" fontWeight="700" fill="#5a4e45">
                 Mühlenweg (14%)
               </text>
             </g>
@@ -358,8 +358,8 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
         {/* Selected Street Inspector Card */}
         <div
           style={{
-            backgroundColor: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            backgroundColor: '#f6f1ea',
+            border: '1px solid #dcd0c1',
             borderRadius: '12px',
             padding: '16px',
             display: 'flex',
@@ -369,7 +369,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
         >
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '18px', fontWeight: 800, color: '#091e2c' }}>
+              <span style={{ fontSize: '18px', fontWeight: 800, color: '#221c18' }}>
                 {selectedStreet.name}
               </span>
               <span
@@ -386,7 +386,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
               </span>
             </div>
 
-            <div style={{ fontSize: '12.5px', color: '#475569', marginBottom: '12px' }}>
+            <div style={{ fontSize: '12.5px', color: '#5a4e45', marginBottom: '12px' }}>
               {selectedStreet.timeline} • {selectedStreet.households} Haushalte
             </div>
 
@@ -398,7 +398,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
                   {effectivePct} %
                 </span>
               </div>
-              <div style={{ height: '9px', backgroundColor: '#e2e8f0', borderRadius: '999px', overflow: 'hidden' }}>
+              <div style={{ height: '9px', backgroundColor: '#dcd0c1', borderRadius: '999px', overflow: 'hidden' }}>
                 <div
                   style={{
                     width: `${effectivePct}%`,
@@ -410,7 +410,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
               </div>
             </div>
 
-            <p style={{ margin: '0 0 14px 0', fontSize: '12.5px', color: '#334155', lineHeight: 1.45 }}>
+            <p style={{ margin: '0 0 14px 0', fontSize: '12.5px', color: '#3a302a', lineHeight: 1.45 }}>
               {selectedStreet.note}
             </p>
           </div>
@@ -426,7 +426,7 @@ export function NeighborhoodMap({ defaultStreetId = 'eichenweg' }) {
               width: '100%',
               border: 'none',
               borderRadius: '8px',
-              backgroundColor: isPledged ? '#10b981' : '#091e2c',
+              backgroundColor: isPledged ? '#bf4416' : '#221c18',
               color: '#ffffff',
               padding: '9px 12px',
               fontSize: '12.5px',
@@ -475,13 +475,13 @@ export function SavingsAndBenefitsCharts({ livingArea = 140 }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
         <div
           style={{
-            background: 'linear-gradient(135deg, #0f766e, #115e59)',
+            background: 'linear-gradient(135deg, #bf4416, #a63a12)',
             color: '#ffffff',
             borderRadius: '14px',
             padding: '14px 16px',
           }}
         >
-          <div style={{ fontSize: '11.5px', color: '#99f6e4', fontWeight: 600 }}>
+          <div style={{ fontSize: '11.5px', color: '#f2c3a6', fontWeight: 600 }}>
             10-Jahres-Ersparnis vs. Gas ({area} m²)
           </div>
           <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '4px' }}>
@@ -491,13 +491,13 @@ export function SavingsAndBenefitsCharts({ livingArea = 140 }) {
 
         <div
           style={{
-            background: 'linear-gradient(135deg, #091e2c, #1e293b)',
+            background: 'linear-gradient(135deg, #221c18, #221c18)',
             color: '#ffffff',
             borderRadius: '14px',
             padding: '14px 16px',
           }}
         >
-          <div style={{ fontSize: '11.5px', color: '#fcd34d', fontWeight: 600 }}>
+          <div style={{ fontSize: '11.5px', color: '#f2a65a', fontWeight: 600 }}>
             Jährliche CO₂-Einsparung
           </div>
           <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '4px' }}>
@@ -507,13 +507,13 @@ export function SavingsAndBenefitsCharts({ livingArea = 140 }) {
 
         <div
           style={{
-            background: 'linear-gradient(135deg, #d97706, #b45309)',
+            background: 'linear-gradient(135deg, #bf4416, #a63a12)',
             color: '#ffffff',
             borderRadius: '14px',
             padding: '14px 16px',
           }}
         >
-          <div style={{ fontSize: '11.5px', color: '#fef3c7', fontWeight: 600 }}>
+          <div style={{ fontSize: '11.5px', color: '#fdeee2', fontWeight: 600 }}>
             Maximale BEG-Förderung
           </div>
           <div style={{ fontSize: '24px', fontWeight: 800, marginTop: '4px' }}>
@@ -528,52 +528,52 @@ export function SavingsAndBenefitsCharts({ livingArea = 140 }) {
         <div
           style={{
             backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
+            border: '1px solid #dcd0c1',
             borderRadius: '14px',
             padding: '14px 16px',
           }}
         >
-          <div style={{ fontSize: '14px', fontWeight: 700, color: '#091e2c', marginBottom: '4px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: '#221c18', marginBottom: '4px' }}>
             📈 Kumulierte Heizkosten über 10 Jahre
           </div>
           <div style={{ display: 'flex', gap: '12px', fontSize: '11px', marginBottom: '6px' }}>
-            <span style={{ color: '#ef4444', fontWeight: 700 }}>● Gasheizung</span>
-            <span style={{ color: '#0284c7', fontWeight: 700 }}>● Wärmepumpe</span>
-            <span style={{ color: '#10b981', fontWeight: 700 }}>● Fernwärme</span>
+            <span style={{ color: '#7a6e65', fontWeight: 700 }}>● Gasheizung</span>
+            <span style={{ color: '#2f6f8f', fontWeight: 700 }}>● Wärmepumpe</span>
+            <span style={{ color: '#bf4416', fontWeight: 700 }}>● Fernwärme</span>
           </div>
 
           <svg viewBox="0 0 360 180" style={{ width: '100%', height: 'auto', display: 'block' }}>
             {/* Grid lines */}
             {[30, 72, 114, 155].map((y) => (
-              <line key={y} x1="42" y1={y} x2="335" y2={y} stroke="#f1f5f9" strokeWidth="1" />
+              <line key={y} x1="42" y1={y} x2="335" y2={y} stroke="#ece3d7" strokeWidth="1" />
             ))}
             {/* Y labels */}
-            <text x="36" y="34" textAnchor="end" fontSize="9.5" fill="#64748b">
+            <text x="36" y="34" textAnchor="end" fontSize="9.5" fill="#7a6e65">
               {Math.round(maxVal / 1000)}k €
             </text>
-            <text x="36" y="96" textAnchor="end" fontSize="9.5" fill="#64748b">
+            <text x="36" y="96" textAnchor="end" fontSize="9.5" fill="#7a6e65">
               {Math.round(maxVal / 2000)}k €
             </text>
-            <text x="36" y="158" textAnchor="end" fontSize="9.5" fill="#64748b">
+            <text x="36" y="158" textAnchor="end" fontSize="9.5" fill="#7a6e65">
               0 €
             </text>
 
             {/* X labels */}
             {years.map((yr) => (
-              <text key={yr} x={toSvgX(yr)} y="172" textAnchor="middle" fontSize="9.5" fill="#64748b">
+              <text key={yr} x={toSvgX(yr)} y="172" textAnchor="middle" fontSize="9.5" fill="#7a6e65">
                 J{yr}
               </text>
             ))}
 
             {/* Lines */}
-            <polyline fill="none" stroke="#ef4444" strokeWidth="2.8" points={gasPoints} />
-            <polyline fill="none" stroke="#0284c7" strokeWidth="2.8" strokeDasharray="4 3" points={wpPoints} />
-            <polyline fill="none" stroke="#10b981" strokeWidth="3.2" points={fwPoints} />
+            <polyline fill="none" stroke="#7a6e65" strokeWidth="2.8" points={gasPoints} />
+            <polyline fill="none" stroke="#2f6f8f" strokeWidth="2.8" strokeDasharray="4 3" points={wpPoints} />
+            <polyline fill="none" stroke="#bf4416" strokeWidth="3.2" points={fwPoints} />
 
             {/* End Dots */}
-            <circle cx={toSvgX(10)} cy={toSvgY(10 * annualGasCost)} r="4" fill="#ef4444" />
-            <circle cx={toSvgX(10)} cy={toSvgY(10 * annualWaermepumpeCost)} r="4" fill="#0284c7" />
-            <circle cx={toSvgX(10)} cy={toSvgY(10 * annualFernwaermeCost)} r="4.5" fill="#10b981" />
+            <circle cx={toSvgX(10)} cy={toSvgY(10 * annualGasCost)} r="4" fill="#7a6e65" />
+            <circle cx={toSvgX(10)} cy={toSvgY(10 * annualWaermepumpeCost)} r="4" fill="#2f6f8f" />
+            <circle cx={toSvgX(10)} cy={toSvgY(10 * annualFernwaermeCost)} r="4.5" fill="#bf4416" />
           </svg>
         </div>
 
@@ -581,7 +581,7 @@ export function SavingsAndBenefitsCharts({ livingArea = 140 }) {
         <div
           style={{
             backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
+            border: '1px solid #dcd0c1',
             borderRadius: '14px',
             padding: '14px 16px',
             display: 'flex',
@@ -590,35 +590,35 @@ export function SavingsAndBenefitsCharts({ livingArea = 140 }) {
           }}
         >
           <div>
-            <div style={{ fontSize: '14px', fontWeight: 700, color: '#091e2c', marginBottom: '4px' }}>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: '#221c18', marginBottom: '4px' }}>
               📊 Vorteile im Direktvergleich
             </div>
             <div style={{ display: 'flex', gap: '12px', fontSize: '11px', marginBottom: '12px' }}>
-              <span style={{ color: '#0f766e', fontWeight: 700 }}>■ Fernwärme</span>
-              <span style={{ color: '#0284c7', fontWeight: 700 }}>■ Wärmepumpe</span>
+              <span style={{ color: '#bf4416', fontWeight: 700 }}>■ Fernwärme</span>
+              <span style={{ color: '#2f6f8f', fontWeight: 700 }}>■ Wärmepumpe</span>
             </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '11px' }}>
             {benefitScores.map((item) => (
               <div key={item.label}>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: '#3a302a', marginBottom: '4px' }}>
                   {item.label}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ flex: 1, height: '8px', backgroundColor: '#f1f5f9', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div style={{ width: `${item.fw}%`, height: '100%', backgroundColor: '#10b981', borderRadius: '999px' }} />
+                    <div style={{ flex: 1, height: '8px', backgroundColor: '#ece3d7', borderRadius: '999px', overflow: 'hidden' }}>
+                      <div style={{ width: `${item.fw}%`, height: '100%', backgroundColor: '#bf4416', borderRadius: '999px' }} />
                     </div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', width: '32px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#bf4416', width: '32px' }}>
                       {item.fw}%
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ flex: 1, height: '8px', backgroundColor: '#f1f5f9', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div style={{ width: `${item.wp}%`, height: '100%', backgroundColor: '#38bdf8', borderRadius: '999px' }} />
+                    <div style={{ flex: 1, height: '8px', backgroundColor: '#ece3d7', borderRadius: '999px', overflow: 'hidden' }}>
+                      <div style={{ width: `${item.wp}%`, height: '100%', backgroundColor: '#6fa3bf', borderRadius: '999px' }} />
                     </div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#0369a1', width: '32px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#2f6f8f', width: '32px' }}>
                       {item.wp}%
                     </span>
                   </div>
