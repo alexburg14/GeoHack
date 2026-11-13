@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suche · Demo</title>
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<style>
+  /* A neutral, made-up search engine for the pitch: the story starts where residents start, with a search. */
+  :root { --ink: #1F1F1F; --soft: #5F6368; --line: #DADCE0; --link: #1A0DAB; --ad: #F2F6FC; --accent: #BF4416; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 15px/1.5 Arial, Helvetica, sans-serif; }
+  button, input { font: inherit; color: inherit; }
+  .demo-tag { position: fixed; top: 10px; right: 14px; font-size: 12px; color: var(--soft); }
+  .home { min-height: 100vh; display: grid; place-content: center; justify-items: center; gap: 26px; padding: 16px; }
+  .wordmark { font-size: clamp(44px, 9vw, 72px); font-weight: 700; letter-spacing: -.03em; color: #3C4043; }
+  .wordmark span { color: var(--accent); }
+  .box { display: flex; align-items: center; gap: 12px; width: min(600px, 92vw); padding: 12px 20px; border: 1px solid var(--line);
+    border-radius: 999px; box-shadow: 0 1px 6px rgba(32, 33, 36, .12); background: #fff; }
+  .box input { flex: 1; border: 0; outline: 0; background: transparent; min-width: 0; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 600px; }
+  .chips button { border: 1px solid var(--line); background: #F8F9FA; border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+  .top { display: flex; align-items: center; gap: 24px; padding: 18px clamp(16px, 4vw, 40px); border-bottom: 1px solid #EBEBEB; flex-wrap: wrap; }
+  .top .wordmark { font-size: 28px; cursor: pointer; }
+  .top .box { width: min(620px, 100%); padding: 9px 18px; }
+  .results { max-width: 690px; padding: 18px clamp(16px, 4vw, 40px) 48px; margin-left: clamp(0px, 9vw, 150px); }
+  .count { color: var(--soft); font-size: 13px; margin-bottom: 18px; }
+  .hit { margin-bottom: 26px; }
+  .hit .src { font-size: 13px; color: var(--ink); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .hit .src small { color: var(--soft); }
+  .hit a.title { display: inline-block; font-size: 20px; color: var(--link); text-decoration: none; margin: 2px 0 3px; line-height: 1.3; }
+  .hit a.title:hover { text-decoration: underline; }
+  .hit p { margin: 0; color: #4D5156; font-size: 14px; }
+  .label { font-weight: 700; font-size: 12px; }
+  .ad { background: var(--ad); border-radius: 14px; padding: 14px 16px; margin: 0 -16px 26px; }
+  .sitelinks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .sitelinks a { border: 1px solid #D2E3FC; background: #fff; color: #1A73E8; border-radius: 999px; padding: 4px 12px; font-size: 13px; text-decoration: none; }
+  .why { border: 0; background: none; color: var(--soft); font-size: 12px; cursor: pointer; padding: 0; text-decoration: underline; }
+  .why-box { margin-top: 10px; padding: 10px 12px; border: 1px dashed #F1C9AE; background: #FFF4EC; border-radius: 10px; font-size: 13px; color: #5A4E45; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<span class="demo-tag">Nachgebaute Suchseite · Demo</span>
+
+<section id="home" class="home">
+  <div class="wordmark">Such<span>e</span></div>
+  <form class="box" data-search>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA0A6" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input name="q" aria-label="Suchbegriff" placeholder="Suchen …" autocomplete="off" autofocus>
+  </form>
+  <div class="chips">
+    <button type="button">gasheizung 17 jahre alt tauschen</button>
+    <button type="button">wärmepumpe kosten einfamilienhaus</button>
+    <button type="button">fernwärme unterhaching anschluss</button>
+  </div>
+</section>
+
+<section id="serp" class="hidden">
+  <header class="top">
+    <div class="wordmark" id="home-link">Such<span>e</span></div>
+    <form class="box" data-search>
+      <input name="q" aria-label="Suchbegriff" autocomplete="off">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A73E8" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    </form>
+  </header>
+  <main class="results">
+    <p class="count">Ungefähr 1.240.000 Ergebnisse · Standort: Unterhaching</p>
+
+    <!-- Our ad: shown to people searching for a new heating system in streets of the planned network -->
+    <div class="hit ad">
+      <div class="src"><span class="label">Gesponsert</span> Wärme-Pakt Unterhaching <small>· Geothermie-Fernwärme</small></div>
+      <a class="title" href="/?von=anzeige&amp;strasse=J%C3%A4gerstra%C3%9Fe">Fernwärme kommt in die Jägerstraße – ohne Risiko für Sie</a>
+      <p>Heizung alt? Bevor Sie sich 20 Jahre binden: Wartegarantie, falls Ihre Heizung vorher ausfällt. Zusage gilt erst, wenn die Nachbarn mitziehen. Kosten in 1 Minute vergleichen.</p>
+      <div class="sitelinks">
+        <a href="/?von=anzeige&amp;strasse=J%C3%A4gerstra%C3%9Fe">Adresse prüfen</a>
+        <a href="/?von=anzeige&amp;strasse=J%C3%A4gerstra%C3%9Fe">Wartegarantie</a>
+        <a href="/?von=anzeige&amp;strasse=J%C3%A4gerstra%C3%9Fe">Kosten vergleichen</a>
+      </div>
+      <p style="margin-top:10px"><button class="why" type="button" id="why">Warum sehe ich diese Anzeige?</button></p>
+      <div class="why-box hidden" id="why-box">
+        Sie suchen nach einem Heizungstausch, und Ihr Standort liegt in einer Straße, die im Geothermie-Netz geplant ist (Bauphase 2).
+        Genau in diesem Moment entscheidet sich, ob ein Haushalt für 20 Jahre eine andere Heizung einbaut.
+      </div>
+    </div>
+
+    <!-- The competition: fast and concrete -->
+    <div class="hit">
+      <div class="src"><span class="label">Gesponsert</span> Beispiel-Heiztechnik <small>· Wärmepumpen-Fachbetrieb</small></div>
+      <a class="title">Wärmepumpe in 12 Wochen eingebaut – Festpreis, Förderung inklusive</a>
+      <p>Kostenloses Angebot in 24 Stunden. Wir kümmern uns um alles, vom Förderantrag bis zur Inbetriebnahme.</p>
+    </div>
+
+    <div class="hit">
+      <div class="src">Ratgeber Heizen <small>· Beispiel</small></div>
+      <a class="title">Gasheizung tauschen: Was das Gebäudeenergiegesetz jetzt verlangt</a>
+      <p>Ab wann muss die alte Heizung raus, welche Fristen gelten, und warum sich ein Blick in die kommunale Wärmeplanung lohnt …</p>
+    </div>
+    <div class="hit">
+      <div class="src">Verbraucherportal <small>· Beispiel</small></div>
+      <a class="title">Wärmepumpe oder Fernwärme? Die Kosten über 20 Jahre im Vergleich</a>
+      <p>Anschaffung, Strompreis, Wärmepreis: Was ein Einfamilienhaus mit 140 m² in den nächsten zwei Jahrzehnten zahlt …</p>
+    </div>
+    <div class="hit">
+      <div class="src">Gemeindeblatt <small>· Beispiel</small></div>
+      <a class="title">Kommunale Wärmeplanung: Wann kommt die Fernwärme in meine Straße?</a>
+      <p>Die Gemeinde hat ihren Wärmeplan vorgelegt. Für viele Straßen heißt es: Anschluss frühestens in einigen Jahren …</p>
+    </div>
+  </main>
+</section>
+
+<script>
+  "use strict";
+  const home = document.getElementById("home");
+  const serp = document.getElementById("serp");
+  function search(q) {
+    if (!q.trim()) return;
+    document.querySelectorAll("input[name=q]").forEach((i) => { i.value = q; });
+    home.classList.add("hidden");
+    serp.classList.remove("hidden");
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll("[data-search]").forEach((f) => f.addEventListener("submit", (e) => {
+    e.preventDefault();
+    search(f.q.value);
+  }));
+  document.querySelectorAll(".chips button").forEach((b) => b.addEventListener("click", () => search(b.textContent)));
+  document.getElementById("home-link").addEventListener("click", () => { serp.classList.add("hidden"); home.classList.remove("hidden"); });
+  document.getElementById("why").addEventListener("click", () => document.getElementById("why-box").classList.toggle("hidden"));
+</script>
+</body>
+</html>

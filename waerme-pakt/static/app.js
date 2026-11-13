@@ -589,7 +589,7 @@ $("#chat-form").addEventListener("submit", (e) => { e.preventDefault(); sendChat
 $("#stake-range").addEventListener("input", (e) => { $("#stake-amount").value = e.target.value; updateStake(); });
 $("#stake-amount").addEventListener("change", (e) => { $("#stake-range").value = e.target.value; updateStake(); });
 
-onEnter.pruefen = () => setTimeout(() => maps.map.invalidateSize(), 50);
+onEnter.pruefen = () => setTimeout(() => { maps.map.map.invalidateSize(); refreshMaps(!state.check); }, 50);
 onEnter.fragen = () => { renderContext(); renderChat(); };
 onEnter.nachbarschaft = async () => {
   if (!maps.map2) { maps.map2 = makeMap("map2"); maps.map2.mode = "quote"; }
@@ -600,6 +600,38 @@ onEnter.nachbarschaft = async () => {
 };
 onEnter.beteiligung = () => updateStake();
 onEnter.betreiber = () => renderOperator();
+
+/* ---------- Start ---------- */
+
+// Each worry a resident has about signing, the answer from the config, and where the app shows it.
+const WORRIES = [
+  { sorge: "„Bis das Netz kommt, ist meine Heizung kaputt.“", titel: "Wartegarantie", step: "fragen", link: "Berater fragen" },
+  { sorge: "„Und wenn in meiner Straße nie gebaut wird?“", titel: "Schwellen-Vertrag", step: "pruefen", link: "Straße prüfen" },
+  { sorge: "„Am Ende zahle ich mehr als mit Gas.“", titel: "Preisgarantie", step: "rechnen", link: "Kosten vergleichen", extra: "Dazu der 20-Jahres-Vergleich mit allen Annahmen offen." },
+  { sorge: "„Dann hänge ich jahrelang fest.“", titel: "Ausstiegsklausel", step: "nachbarschaft", link: "Zur Zusage" },
+];
+
+function renderStart() {
+  const answers = Object.fromEntries(state.config.zusage.bedingungen.map((b) => [b.titel, b.text]));
+  answers.Wartegarantie = state.config.wartegarantie.text.split(". ")[0] + ".";
+  $("#worries").innerHTML = WORRIES.map((w, i) => `
+    <article class="card worry">
+      <p class="sorge">${esc(w.sorge)}</p>
+      <h2><span class="n">${i + 1}</span>${esc(w.titel)}</h2>
+      <p>${esc(answers[w.titel])}${w.extra ? " " + esc(w.extra) : ""}</p>
+      <button class="link" data-goto="${w.step}">${esc(w.link)} →</button>
+    </article>`).join("");
+  const total = state.ranking.reduce((n, r) => n + r.zusagen, 0);
+  $("#start-social").textContent = `${num(total)} Haushalte in Unterhaching haben schon zugesagt. Bedingungen: ${state.config.zusage.status}.`;
+  const name = new URLSearchParams(location.search).get("strasse");
+  const street = state.streets.find((s) => s.name === name);
+  const row = state.ranking.find((r) => r.strasse === name);
+  if (street && row) {
+    $("#street-teaser").innerHTML = `<b>${esc(street.name)}</b> ist im Netz geplant: ${esc(street.label)}, Anschluss voraussichtlich ${esc(street.expectedConnection)}.
+      Schon <b>${row.zusagen} von ${row.haushalte}</b> Nachbarn sind dabei (${pct(row.quote)}, Schwelle ${pct(state.schwelle)}).`;
+    $("#street-teaser").classList.remove("hidden");
+  }
+}
 
 async function resetDemo() {
   await api("/api/reset", {});
@@ -628,6 +660,8 @@ async function init() {
   renderChat();
   renderStakeInfo();
   updateStake();
+  renderStart();
+  $(".brand").addEventListener("click", (e) => { e.preventDefault(); go("start"); });
   const preset = new URLSearchParams(location.search).get("strasse");
   if (preset) $("#street-input").value = preset;
 }

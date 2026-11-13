@@ -20,7 +20,9 @@ damit die Live-Demo nie hängen bleibt.
 
 ## Demo-Ablauf (Familie Huber)
 
-1. Schritt 1: `Jägerstraße`, Nr. `12` → Bauphase 2, Anschluss 2029, 61 % zugesagt
+0. http://localhost:8000/suche → „gasheizung 17 jahre alt tauschen“ → Anzeige „Fernwärme kommt in die Jägerstraße“ anklicken
+   → Startseite mit den vier Sorgen (Wartegarantie, Schwellen-Vertrag, Preisgarantie, Ausstiegsklausel) → „Adresse prüfen“
+1. Schritt 1: `Jägerstraße` (schon eingetragen), Nr. `12` → Bauphase 2, Anschluss 2029, 61 % zugesagt
 2. Schritt 2: „Beispiel: Familie Huber“ → Vergleich berechnen (Baujahr 1985, Gas, 17 Jahre, 140 m², 4 Personen)
 3. Schritt 3: „Was passiert, wenn meine Heizung vorher kaputtgeht?“ → Wartegarantie, „Störung jetzt melden“ → Ticket
 4. Beteiligung: 2.000 € → Zinsen, Wärmepreis-Bonus, „Beteiligung zeichnen“ (Zahlung nur als Attrappe)
