@@ -48,8 +48,9 @@ export default function LongRunStory({ scrollRoot, result, keys, meta, label, he
 
   const o = result.optionen;
   const firstBoiler = Math.max(0, LIFETIMES.bestand - heatingAge);
+  const pumpSwaps = Array.from({ length: Math.floor((LONG - 1) / LIFETIMES.waermepumpe) }, (_, n) => (n + 1) * LIFETIMES.waermepumpe);
   const markers = [
-    { index: LIFETIMES.waermepumpe, label: 'Neue Wärmepumpe', color: meta.waermepumpe.color },
+    ...pumpSwaps.map((index) => ({ index, label: 'Neue Wärmepumpe', color: meta.waermepumpe.color })),
     { index: firstBoiler + LIFETIMES.bestand, label: 'Neuer Kessel', color: meta.bestand.color, row: 1 },
     { index: o.fernwaerme.jahre_bis_anschluss + LIFETIMES.station, label: 'Station erneuert', color: meta.fernwaerme.color, row: 2 },
   ].filter((m) => m.index < LONG);
@@ -70,8 +71,8 @@ export default function LongRunStory({ scrollRoot, result, keys, meta, label, he
     };
   } else if (horizon < 31) {
     caption = {
-      h: 'Nach rund 20 Jahren ist die Wärmepumpe am Ende.',
-      p: 'Ein neues Gerät wird fällig, beim Gaskessel ebenso. Die Übergabestation der Fernwärme läuft weiter.',
+      h: `Eine Wärmepumpe hält rund ${LIFETIMES.waermepumpe} Jahre.`,
+      p: `Bis ${START_YEAR + LONG - 1} brauchen Sie ${pumpSwaps.length} neue Geräte, beim Gaskessel ebenso. Die Übergabestation der Fernwärme läuft weiter.`,
     };
   } else if (horizon < LONG - 0.5) {
     caption = {

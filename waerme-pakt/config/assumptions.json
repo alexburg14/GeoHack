@@ -39,15 +39,16 @@
     "altbau_bis_baujahr": {"wert": 1994, "einheit": "", "label": "Zusatzkosten bis Baujahr"},
     "strompreis_ct": {"wert": 28, "einheit": "ct/kWh", "label": "Wärmepumpen-Strompreis"},
     "grundpreis_eur": {"wert": 120, "einheit": "€/Jahr", "label": "Grundpreis Strom (Zähler)"},
-    "preissteigerung": {"wert": 0.02, "einheit": "pro Jahr", "label": "Preissteigerung Strom"},
+    "preissteigerung": {"wert": 0.03, "einheit": "pro Jahr", "label": "Preissteigerung Strom (steigende Netzentgelte)", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
     "wartung_eur": {"wert": 150, "einheit": "€/Jahr", "label": "Wartung Wärmepumpe"},
-    "lebensdauer": {"wert": 20, "einheit": "Jahre", "label": "Lebensdauer Wärmepumpe"},
+    "lebensdauer": {"wert": 15, "einheit": "Jahre", "label": "Lebensdauer Wärmepumpe", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
     "ersatz_eur": {"wert": 20000, "einheit": "€", "label": "Neues Gerät nach Ende der Lebensdauer (ohne Förderung)"},
     "jaz": {
       "label": "Jahresarbeitszahl nach Baujahr",
+      "quelle": "Bis Baujahr 1994 gesenkt (Heizkörper, hohe Vorlauftemperatur): Expertenrunde Hackathon 13.11.2026, zu bestätigen",
       "stufen": [
-        {"bis_baujahr": 1977, "wert": 2.7},
-        {"bis_baujahr": 1994, "wert": 3.0},
+        {"bis_baujahr": 1977, "wert": 2.5},
+        {"bis_baujahr": 1994, "wert": 2.7},
         {"bis_baujahr": 2001, "wert": 3.3},
         {"bis_baujahr": 2015, "wert": 3.6},
         {"bis_baujahr": 9999, "wert": 4.0}
@@ -59,7 +60,7 @@
     "anschlusskosten_eur": {"wert": 9000, "einheit": "€", "label": "Hausanschluss und Übergabestation"},
     "foerderquote": {"wert": 0.3, "einheit": "", "label": "Förderung Anschluss"},
     "fruehzeichner_rabatt_eur": {"wert": 1500, "einheit": "€", "label": "Rabatt für frühe Zusage"},
-    "preissteigerung": {"wert": 0.02, "einheit": "pro Jahr", "label": "Preissteigerung Fernwärme"},
+    "preissteigerung": {"wert": 0.015, "einheit": "pro Jahr", "label": "Preissteigerung Fernwärme (Geothermie: vor allem Fixkosten)", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
     "wartung_eur": {"wert": 60, "einheit": "€/Jahr", "label": "Wartung Übergabestation"},
     "station_lebensdauer": {"wert": 30, "einheit": "Jahre", "label": "Lebensdauer Übergabestation"},
     "station_erneuerung_eur": {"wert": 3000, "einheit": "€", "label": "Erneuerung Übergabestation"}
