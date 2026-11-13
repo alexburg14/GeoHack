@@ -282,7 +282,16 @@ class Handler(BaseHTTPRequestHandler):
     def serve_static(self, path):
         rel = "index.html" if path in ("", "/") else path.lstrip("/").removeprefix("static/")
         target = (STATIC / rel).resolve()
-        if not target.is_relative_to(STATIC) or not target.is_file():
+        if not target.is_relative_to(STATIC):
+            return self.send_json({"fehler": "Nicht gefunden."}, HTTPStatus.NOT_FOUND)
+        if target.is_dir():
+            if not path.endswith("/"):
+                self.send_response(HTTPStatus.FOUND)
+                self.send_header("Location", path + "/")
+                self.end_headers()
+                return
+            target = target / "index.html"
+        if not target.is_file():
             return self.send_json({"fehler": "Nicht gefunden."}, HTTPStatus.NOT_FOUND)
         data = target.read_bytes()
         self.send_response(HTTPStatus.OK)

@@ -37,7 +37,9 @@ lib/advisor.py          KI-Berater (Claude Messages API über urllib) + Offline-
 config/assumptions.json ALLE Preise und Faktoren (Platzhalter!), in der App unter „Annahmen“ sichtbar
 data/streets.json       20 Straßen: echte OSM-Geometrie, Demo-Haushalte/Zusagen/Bauphasen
 data/updates.json       Baufortschritt (Demo)
+presentation/           Spectacle-Präsentation (React + Vite, Build nach static/presentation/)
 static/                 Frontend (HTML, CSS, JS)
+static/presentation/    Gebaute Spectacle-Präsentation (unter /presentation/ erreichbar)
 tests/                  Unit-Tests des Kostenmodells
 tools/build_streets.py  erzeugt data/streets.json aus einem Overpass-Export
 ```
