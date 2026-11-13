@@ -93,6 +93,13 @@ class AdvisorTest(unittest.TestCase):
         self.assertEqual(res["mode"], "offline")
         self.assertTrue(res["ticket"])
 
+    def test_offline_explains_proposed_conditions(self):
+        res = advisor.answer([{"role": "user", "content": "Kann ich wieder aussteigen?"}], self.context, None)
+        self.assertIn("Ausstiegsklausel", res["text"])
+        self.assertIn("noch nicht verbindlich", res["text"])
+        wait = advisor.answer([{"role": "user", "content": "Wie funktioniert die Wartegarantie?"}], self.context, None)
+        self.assertNotIn("Ausstiegsklausel", wait["text"])
+
     def test_no_key_never_calls_api(self):
         res = advisor.answer([{"role": "user", "content": "Hallo"}], self.context, None, base_url=self.base_url)
         self.assertEqual(res["mode"], "offline")

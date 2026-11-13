@@ -397,7 +397,11 @@ function renderMyStreet() {
       <button class="btn primary big" id="pledge-btn" ${state.pledged ? "disabled" : ""}>${state.pledged ? "Sie sind dabei ✓" : "Ich bin dabei"}</button>
       <button class="btn ghost" id="invite-btn">Nachbarn einladen</button>
     </div>
-    <p class="note" style="margin-top:10px">Mit Ihrer Zusage verzichten Sie bis zum Anschluss auf eine neue Gas- oder Ölheizung. Die Wartegarantie sichert Sie ab.</p>`;
+    <p class="note" style="margin-top:10px">Mit Ihrer Zusage verzichten Sie bis zum Anschluss auf eine neue Gas- oder Ölheizung. Die Wartegarantie sichert Sie ab.</p>
+    <details class="conditions"><summary>Ihre Sicherheit bei der Zusage</summary>
+      <ul>${state.config.zusage.bedingungen.map((b) => `<li><b>${esc(b.titel)}:</b> ${esc(b.text)}</li>`).join("")}</ul>
+      <p class="note">${esc(state.config.zusage.status)}.</p>
+    </details>`;
 }
 
 function renderRanking(movedStreet) {

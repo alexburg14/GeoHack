@@ -179,6 +179,9 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--hot); outli
 .my-street .progress { height: 22px; margin: 28px 0 8px; }
 .my-street .progress .mark { height: 32px; }
 .my-street .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.conditions { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; font-size: 14px; }
+.conditions summary { cursor: pointer; font-weight: 600; }
+.conditions ul { margin: 8px 0; padding-left: 18px; display: grid; gap: 6px; }
 .ranking { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
 .ranking li { display: grid; grid-template-columns: 30px minmax(0, 1fr) 120px 48px; gap: 10px; align-items: center; padding: 7px 8px; border-radius: 10px;
   transition: background .4s; font-size: 14px; }
