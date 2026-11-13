@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { AREAS, PHASES, STREETS, THRESHOLD } from '../data/unterhaching';
+import { AREAS, PHASES, STREETS, THRESHOLD, TOWN } from '../data/town';
 
 // Anonymised district map in the style of the official Ausbauplanung map:
 // pastel district areas, the heating network as red lines on top. Pledges only per district.
@@ -38,7 +38,7 @@ export default function NeighborhoodPage({ myAreaId, onCheckAddress, embedded = 
   };
   const labelHtml = (a) => {
     const value = mode === 'gebiete' ? `Anschluss ${a.years}` : `${pct(share(a))} dabei`;
-    return `<div class="ep-area-label${a.id === selectedId ? ' on' : ''}"><b>${a.name.replace('Unterhaching ', '')}</b><span>${value}</span></div>`;
+    return `<div class="ep-area-label${a.id === selectedId ? ' on' : ''}"><b>${a.name.replace(`${TOWN} `, '')}</b><span>${value}</span></div>`;
   };
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export default function NeighborhoodPage({ myAreaId, onCheckAddress, embedded = 
   return (
     <div className="ep-page" style={{ maxWidth: 1120 }}>
       <div>
-        <p className="eyebrow">Nachbarschaft · Unterhaching</p>
+        <p className="eyebrow">Nachbarschaft · {TOWN}</p>
         <h1>{embedded ? 'Ihre Nachbarn sind schon dabei' : 'Wer in Ihrer Nachbarschaft schon dabei ist'}</h1>
         <p className="muted" style={{ marginTop: 10, fontSize: 16 }}>
           Zusagen und Ausbauplan nach Stadtviertel. Einzelne Straßen und Haushalte zeigen wir bewusst nicht.
@@ -149,7 +149,7 @@ export default function NeighborhoodPage({ myAreaId, onCheckAddress, embedded = 
               ? AREAS.map((a) => (
                   <span key={a.id}>
                     <i className="area" style={{ background: a.color }} />
-                    {a.name.replace('Unterhaching ', '')}: {a.years}
+                    {a.name.replace(`${TOWN} `, '')}: {a.years}
                   </span>
                 ))
               : [

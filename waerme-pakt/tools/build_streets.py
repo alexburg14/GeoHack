@@ -1,7 +1,7 @@
 """Build data/streets.json and data/network.geojson from an Overpass export.
 
 Usage: python3 tools/build_streets.py <overpass-ways.json>
-The export is the result of the query in README.md (named highways in Unterhaching).
+The export is the result of the query in README.md (named highways in Starnberg).
 Geometry is real OpenStreetMap data; phases and pledge counts are demo values.
 """
 import json
@@ -12,27 +12,33 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # name: (households, pledged, phase) -- demo values, not real operator data
 DEMO = {
-    "Rathausstraße": (46, 38, 1),
-    "Schulstraße": (30, 24, 1),
-    "Kapellenstraße": (22, 16, 1),
-    "Parkstraße": (34, 24, 1),
-    "Am Sportpark": (40, 27, 1),
-    "Fasangartenstraße": (26, 17, 2),
-    "Robert-Koch-Straße": (40, 25, 2),
-    "Jägerstraße": (18, 11, 2),
-    "Bussardstraße": (33, 19, 2),
-    "Mühlweg": (24, 13, 2),
-    "Ludwig-Thoma-Straße": (30, 15, 2),
-    "Grünauer Allee": (20, 8, 3),
-    "Waldstraße": (25, 9, 3),
-    "Forststraße": (16, 5, 3),
-    "Walter-Paetzmann-Straße": (44, 12, 3),
-    "Bürgermeister-Prenn-Straße": (38, 9, 3),
-    "Sankt-Alto-Straße": (22, 4, 3),
-    "Pittingerstraße": (26, 4, 3),
-    "Liebigstraße": (30, 3, 3),
-    "Lilienweg": (14, 1, 3),
+    # Ost, near the station: under construction
+    "Schulstraße": (46, 38, 1),
+    "Ferdinand-Maria-Straße": (30, 24, 1),
+    "Giselastraße": (22, 16, 1),
+    "Max-Emanuel-Straße": (34, 24, 1),
+    "Rheinlandstraße": (40, 27, 1),
+    # West: collecting pledges (Ottostraße is the demo street)
+    "Riedeselstraße": (26, 17, 2),
+    "Bismarckstraße": (40, 25, 2),
+    "Ottostraße": (18, 11, 2),
+    "An der Linde": (33, 19, 2),
+    "Nibelungenweg": (24, 13, 2),
+    "Maximilian-von-Dziembowski-Straße": (30, 15, 2),
+    # Nord and Süd: in planning
+    "Josef-Sigl-Straße": (20, 8, 3),
+    "Schießstättstraße": (25, 9, 3),
+    "Am Hochwald": (16, 5, 3),
+    "Hofbuchetstraße": (44, 12, 3),
+    "Waldschmidtstraße": (38, 9, 3),
+    "Jahnstraße": (22, 4, 3),
+    "Prinzenweg": (26, 4, 3),
+    "Wilhelmshöhenstraße": (30, 3, 3),
+    "Oberfeld": (14, 1, 3),
 }
+
+# Only the town of Starnberg itself; the municipality also has villages that reuse street names.
+BBOX = (47.980, 11.310, 48.020, 11.365)  # south, west, north, east
 
 PHASES = {
     1: {"label": "Bauphase 1", "status": "Im Bau", "expectedConnection": "Herbst 2027"},
@@ -46,7 +52,8 @@ def main(src):
     lines = {name: [] for name in DEMO}
     for way in ways:
         name = way["tags"].get("name")
-        if name in lines and way.get("geometry"):
+        inside = all(BBOX[0] <= p["lat"] <= BBOX[2] and BBOX[1] <= p["lon"] <= BBOX[3] for p in way.get("geometry", []))
+        if name in lines and way.get("geometry") and inside:
             lines[name].append([[round(p["lon"], 5), round(p["lat"], 5)] for p in way["geometry"]])
 
     streets, features = [], []

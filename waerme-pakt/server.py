@@ -276,7 +276,7 @@ class Handler(BaseHTTPRequestHandler):
             "ticket": number,
             "angebot": "Übergangsheizung (mobile Heizzentrale) ohne Investition, bis Ihr Haus ans Netz geht. "
                        "Sie zahlen nur die Wärme, die Sie verbrauchen.",
-            "naechster_schritt": "Ein Techniker aus Unterhaching ruft Sie an, um einen Termin zu vereinbaren.",
+            "naechster_schritt": "Ein Techniker aus Starnberg ruft Sie an, um einen Termin zu vereinbaren.",
         }
 
     def serve_static(self, path):

@@ -50,7 +50,7 @@ export default function GuaranteeSlides({ onStart, onNeighbourhood, pledgedTotal
   return (
     <section className="ep-guarantees hero" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       <div className="ep-guarantees-intro">
-        <p className="eyebrow">Geothermie-Fernwärme für Unterhaching</p>
+        <p className="eyebrow">Geothermie-Fernwärme für Starnberg</p>
         <h2>Jede Sorge bekommt eine Garantie</h2>
         <ol className="ep-gnav">
           {GUARANTEES.map((item, i) => (
@@ -101,7 +101,7 @@ export default function GuaranteeSlides({ onStart, onNeighbourhood, pledgedTotal
         </div>
       </div>
 
-      <p className="ep-gnote">Garantien sind ein Vorschlag des Teams, noch nicht mit Geothermie Unterhaching abgestimmt.</p>
+      <p className="ep-gnote">Garantien sind ein Vorschlag des Teams, noch nicht mit dem Betreiber abgestimmt.</p>
     </section>
   );
 }

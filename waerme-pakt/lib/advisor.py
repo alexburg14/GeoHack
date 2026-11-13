@@ -14,7 +14,7 @@ DEFAULT_MODEL = "claude-opus-5-5"
 
 TICKET_TOKEN = "[[FORMULAR_HEIZUNG_KAPUTT]]"
 
-SYSTEM_PROMPT = f"""Du bist der Wärme-Pakt-Berater, ein digitaler Ansprechpartner für Bürgerinnen und Bürger in Unterhaching, die überlegen, ihr Haus an das Geothermie-Fernwärmenetz anzuschließen. Dies ist ein Hackathon-Prototyp mit Demodaten.
+SYSTEM_PROMPT = f"""Du bist der Wärme-Pakt-Berater, ein digitaler Ansprechpartner für Bürgerinnen und Bürger in Starnberg, die überlegen, ihr Haus an das Geothermie-Fernwärmenetz anzuschließen. Dies ist ein Hackathon-Prototyp mit Demodaten.
 
 So sprichst du:
 - Freundlich, bodenständig und ehrlich, wie ein Nachbar, der sich auskennt. Siezen.
@@ -23,7 +23,7 @@ So sprichst du:
 
 Zahlen und Fakten:
 - Verwende ausschließlich Zahlen, Termine und Bedingungen aus dem KONTEXT unten. Erfinde keine Preise, Förderquoten, Termine oder Zusagen.
-- Wenn etwas nicht im Kontext steht, sag das offen und verweise auf den Kundenservice von Geothermie Unterhaching.
+- Wenn etwas nicht im Kontext steht, sag das offen und verweise auf den Kundenservice des Wärmenetz-Betreibers.
 - Alle Preise im Kontext sind Platzhalter für die Demo. Erwähne das, wenn jemand konkret nach Preisen fragt.
 - Die Zusage-Bedingungen (Schwellen-Vertrag, Ausstiegsklausel, Preisgarantie) im Kontext sind Vorschläge, die noch nicht verbindlich sind. Sag das, wenn du sie nennst.
 - Sei ehrlich, auch wenn eine andere Option günstiger ist. Erkläre dann, was neben dem Preis zählt (CO₂, kein Gerät im Haus, lokale Wärme, Beteiligung, Preisentwicklung).
@@ -111,7 +111,7 @@ def _call_claude(messages, context, api_key, model, base_url):
         detail = err.read().decode("utf-8", "replace")[:300]
         raise ValueError(f"HTTP {err.code}: {detail}") from err
     if data.get("stop_reason") == "refusal":
-        return "Dazu kann ich leider nichts sagen. Bei Fragen zu Ihrem Anschluss hilft Ihnen der Kundenservice von Geothermie Unterhaching gern weiter."
+        return "Dazu kann ich leider nichts sagen. Bei Fragen zu Ihrem Anschluss hilft Ihnen der Kundenservice des Wärmenetz-Betreibers gern weiter."
     text = "".join(block["text"] for block in data["content"] if block["type"] == "text").strip()
     if not text:
         raise ValueError("empty response")
@@ -144,7 +144,7 @@ def _offline_answer(question, ctx):
             f"Über 20 Jahre kommen wir mit den Demo-Annahmen auf {_eur(fw['gesamtkosten_eur'])} für Fernwärme, "
             f"{_eur(wp['gesamtkosten_eur'])} für eine Wärmepumpe und {_eur(best['gesamtkosten_eur'])}, wenn Sie bei Ihrer Heizung bleiben. "
             f"Beim CO₂ liegt die Geothermie klar vorn: {fw['co2_tonnen_20_jahre']} t statt {wp['co2_tonnen_20_jahre']} t bzw. "
-            f"{best['co2_tonnen_20_jahre']} t. Dazu kommt: kein Gerät im Haus, Wärme aus Unterhaching und keine Wartung. "
+            f"{best['co2_tonnen_20_jahre']} t. Dazu kommt: kein Gerät im Haus, Wärme aus Starnberg und keine Wartung. "
             "Die Preise sind Platzhalter, bis echte Zahlen vorliegen."
         )
     if any(w in q for w in ("wann", "dauer", "zeit", "2029", "termin", "warum dauert", "anschluss")) and adresse:
@@ -165,5 +165,5 @@ def _offline_answer(question, ctx):
         return "Über den Reiter „Beteiligung“ können Sie einen Betrag wählen. Ich rechne Ihnen dann Zinsen und Wärmepreis-Bonus vor."
     return (
         "Gute Frage. Ich kann Ihnen zu Anschlusstermin, Kostenvergleich, Wartegarantie und Bürgerbeteiligung Auskunft geben. "
-        "Für alles andere hilft Ihnen der Kundenservice von Geothermie Unterhaching weiter. (Offline-Modus ohne KI-Schlüssel)"
+        "Für alles andere hilft Ihnen der Kundenservice des Wärmenetz-Betreibers weiter. (Offline-Modus ohne KI-Schlüssel)"
     )

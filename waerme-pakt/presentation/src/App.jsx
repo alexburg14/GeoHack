@@ -169,7 +169,7 @@ export default function App() {
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 44 }}>
-          <strong style={{ fontSize: 24, fontWeight: 600 }}>Jägerstraße (Demo)</strong>
+          <strong style={{ fontSize: 24, fontWeight: 600 }}>Ottostraße (Demo)</strong>
           <strong style={{ fontSize: 24, fontWeight: 600, color: 'var(--rust)' }}>61 % → 67 % zugesagt</strong>
         </div>
         <div className="bar">
@@ -191,7 +191,7 @@ export default function App() {
             <h2>
               Familie Huber,
               <br />
-              Unterhaching
+              Starnberg
             </h2>
             <p style={{ fontSize: 23, lineHeight: 1.6, marginTop: 30 }}>
               Einfamilienhaus, Baujahr 1985
@@ -204,8 +204,8 @@ export default function App() {
               ['Adresse prüfen:', ' Straße in Bauphase 2, Anschluss voraussichtlich 2029'],
               ['Situation eingeben:', ' 20 Jahre Geothermie, Wärmepumpe und Gas im Vergleich'],
               ['Berater fragen:', ' „Was passiert, wenn meine Heizung vorher kaputtgeht?“'],
-              ['Beteiligen:', ' 2.000 € anlegen und die erwartete Rendite sehen'],
-              ['„Ich bin dabei“:', ' Die Jägerstraße springt von 61 % auf 67 % – über die Schwelle'],
+              ['Beteiligen:', ' Mitglied werden und 10 Jahre weniger für Wärme zahlen'],
+              ['„Ich bin dabei“:', ' Die Ottostraße springt von 61 % auf 67 % – über die Schwelle'],
             ].map(([b, rest], i) => (
               <li key={b}>
                 <span className="n">{i + 1}</span>
@@ -217,7 +217,7 @@ export default function App() {
             ))}
           </ol>
         </div>
-        <Footer left="Live im Browser · Demodaten für Unterhaching" page="5" />
+        <Footer left="Live im Browser · Demodaten für Starnberg" page="5" />
       </PitchSlide>
 
       {/* 6 · Technik */}
@@ -295,7 +295,7 @@ export default function App() {
           {[
             ['bars', 'Betreiber-Dashboard', 'Live-Stand je Straße: Wo die Schwelle fast erreicht ist, lohnt sich der nächste Hausbesuch.'],
             ['people', 'Lokale Ansprache', 'Haushalte mit alten Kesseln zuerst – gemeinsam mit Schornsteinfegern und Vereinen vor Ort.'],
-            ['shield', 'Kapital aus dem Ort', 'Bürgerbeteiligung mit fester Verzinsung: Wer mitbesitzt, bleibt – und wirbt Nachbarn.'],
+            ['shield', 'Kapital aus dem Ort', 'Genossenschaft mit Wärmerabatt statt Zinsen: Wer mitbesitzt, bleibt – und wirbt Nachbarn.'],
           ].map(([icon, t, d]) => (
             <div className="card econ-card" key={t} style={{ minHeight: 288 }}>
               <Icon name={icon} />
@@ -328,7 +328,7 @@ export default function App() {
             <p className="eyebrow">Nächste Schritte</p>
             <ol style={{ listStyle: 'none', margin: 0, padding: 0 }}>
               {[
-                'Echte Preise und Netzdaten von Geothermie Unterhaching einsetzen',
+                'Echte Preise und Netzdaten des Betreibers einsetzen',
                 'Pilot in einem Quartier vor Baubeginn',
                 'Entscheiden: Preisgarantie, Frühzeichner-Rabatt, Schwellen-Vertrag, Ausstiegsklausel',
               ].map((t, i) => (
