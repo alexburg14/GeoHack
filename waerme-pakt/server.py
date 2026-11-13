@@ -280,7 +280,7 @@ class Handler(BaseHTTPRequestHandler):
         }
 
     def serve_static(self, path):
-        rel = "index.html" if path in ("", "/") else path.lstrip("/").removeprefix("static/")
+        rel = {"": "index.html", "/": "index.html", "/suche": "suche.html"}.get(path) or path.lstrip("/").removeprefix("static/")
         target = (STATIC / rel).resolve()
         if not target.is_relative_to(STATIC):
             return self.send_json({"fehler": "Nicht gefunden."}, HTTPStatus.NOT_FOUND)

@@ -17,7 +17,7 @@
     <span><b>Wärme-Pakt</b><small>Unterhaching · Demo</small></span>
   </a>
   <nav class="steps" aria-label="Schritte">
-    <button data-step="pruefen" class="active"><span>1</span>Prüfen</button>
+    <button data-step="pruefen"><span>1</span>Prüfen</button>
     <button data-step="rechnen"><span>2</span>Rechnen</button>
     <button data-step="fragen"><span>3</span>Fragen</button>
     <button data-step="nachbarschaft"><span>4</span>Zusagen</button>
@@ -27,8 +27,23 @@
 </header>
 
 <main>
+  <!-- 0 Start: the four worries that stop people from signing, and the answer to each -->
+  <section id="start" class="step-panel active">
+    <div class="hero">
+      <p class="eyebrow">Geothermie-Fernwärme für Unterhaching</p>
+      <h1>Ihre Heizung ist alt. Das Netz kommt.<br>Das Risiko tragen nicht Sie.</h1>
+      <p class="lead">Eine Wärmepumpe ist in drei Monaten eingebaut. Auf die Fernwärme müssen Sie warten. Deshalb haben wir jede Sorge, die Sie vom Zusagen abhält, vorher gelöst.</p>
+      <div id="street-teaser" class="street-teaser hidden"></div>
+    </div>
+    <div class="worries" id="worries"></div>
+    <div class="cta-row hero-cta">
+      <button class="btn primary big" data-goto="pruefen">Adresse prüfen: Kommt das Netz zu mir?</button>
+      <span class="note" id="start-social"></span>
+    </div>
+  </section>
+
   <!-- 1 Prüfen -->
-  <section id="pruefen" class="step-panel active">
+  <section id="pruefen" class="step-panel">
     <div class="intro">
       <p class="eyebrow">Schritt 1 · Adresse prüfen</p>
       <h1>Kommt die Geothermie in Ihre Straße?</h1>

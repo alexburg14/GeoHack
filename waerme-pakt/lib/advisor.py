@@ -25,6 +25,7 @@ Zahlen und Fakten:
 - Verwende ausschließlich Zahlen, Termine und Bedingungen aus dem KONTEXT unten. Erfinde keine Preise, Förderquoten, Termine oder Zusagen.
 - Wenn etwas nicht im Kontext steht, sag das offen und verweise auf den Kundenservice von Geothermie Unterhaching.
 - Alle Preise im Kontext sind Platzhalter für die Demo. Erwähne das, wenn jemand konkret nach Preisen fragt.
+- Die Zusage-Bedingungen (Schwellen-Vertrag, Ausstiegsklausel, Preisgarantie) im Kontext sind Vorschläge, die noch nicht verbindlich sind. Sag das, wenn du sie nennst.
 - Sei ehrlich, auch wenn eine andere Option günstiger ist. Erkläre dann, was neben dem Preis zählt (CO₂, kein Gerät im Haus, lokale Wärme, Beteiligung, Preisentwicklung).
 
 Wartegarantie und Störungen:
@@ -39,6 +40,7 @@ def build_context(check, inputs, comparison, stake, assumptions):
     context = {
         "adresse": check,
         "wartegarantie": assumptions["wartegarantie"]["text"],
+        "zusage_bedingungen": assumptions["zusage"],
         "hinweis": assumptions["hinweis"],
     }
     if inputs:
@@ -132,6 +134,9 @@ def _offline_answer(question, ctx):
             f"{ctx['wartegarantie']} Damit wir schnell helfen können, brauchen wir Heizungsart, Alter, "
             "was genau nicht funktioniert und eine Telefonnummer für den Rückruf. " + TICKET_TOKEN
         )
+    if any(w in q for w in ("aussteig", "ausstieg", "rücktritt", "zurücktret", "kündig", "binde", "gebunden", "verpflicht", "preisgarantie", "vertrag")):
+        lines = "\n".join(f"- {b['titel']}: {b['text']}" for b in ctx["zusage_bedingungen"]["bedingungen"])
+        return f"Für Ihre Zusage sind diese Bedingungen vorgeschlagen (noch nicht verbindlich):\n{lines}\nDazu kommt die Wartegarantie, falls Ihre Heizung vorher ausfällt."
     if vergleich and any(w in q for w in ("kost", "teuer", "preis", "günstig", "lohnt", "wärmepumpe", "spar", "co2", "co₂")):
         o = vergleich["optionen"]
         fw, wp, best = o["Geothermie-Fernwärme"], o["Wärmepumpe"], o["Weiter mit bisheriger Heizung"]

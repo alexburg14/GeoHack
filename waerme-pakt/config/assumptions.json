@@ -80,6 +80,14 @@
     "rabatt_ab_eur": {"wert": 1000, "einheit": "€", "label": "Bonus ab Beteiligung von"},
     "netz_investition_eur": {"wert": 40000000, "einheit": "€", "label": "Investition Netzausbau (Demo)"}
   },
+  "zusage": {
+    "status": "Vorschlag des Teams, noch nicht mit Geothermie Unterhaching abgestimmt",
+    "bedingungen": [
+      {"titel": "Schwellen-Vertrag", "text": "Ihre Zusage wird erst wirksam, wenn Ihre Straße die Schwelle erreicht. Bis dahin gehen Sie keine Verpflichtung ein."},
+      {"titel": "Ausstiegsklausel", "text": "Kommt Ihr Anschluss mehr als 2 Jahre später als angekündigt, können Sie kostenlos zurücktreten."},
+      {"titel": "Preisgarantie", "text": "In den ersten 5 Jahren nach dem Anschluss liegt Ihr Wärmepreis nicht über dem Gaspreis-Vergleichswert."}
+    ]
+  },
   "wartegarantie": {
     "text": "Wer zusagt und dessen Heizung vor dem Anschluss ausfällt, bekommt eine Übergangsheizung (mobile Heizzentrale oder Mietkessel) ohne Investition. Es fallen nur die Verbrauchskosten wie bei Fernwärme an. Die Zusage bleibt bestehen, ein neuer Gaskessel ist nicht nötig."
   }

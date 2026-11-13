@@ -28,5 +28,9 @@ danach gelöscht werden. Echte Werte also nicht dauerhaft ins öffentliche Repos
 | **Schwellen-Vertrag** (Zusage wird nur wirksam, wenn die Straße die Schwelle erreicht) | Risiko „Ich sage zu, und dann passiert nichts“ | Text beim Button „Ich bin dabei“ anpassen |
 | **Ausstiegsklausel** (Rücktritt, falls Anschluss später als X Jahre nach Zusage kommt) | Zeit- und Lock-in-Risiko | Text beim Button + Wissen des Beraters |
 
+Stand in der App: Schwellen-Vertrag, Ausstiegsklausel (2 Jahre Verzug) und Preisgarantie (5 Jahre nicht über
+Gas-Vergleichswert) sind als **Vorschlag** in `assumptions.json` → `zusage` eingetragen und unter dem Button
+„Ich bin dabei“ sichtbar. Texte dort ändern oder Einträge löschen, sobald entschieden ist.
+
 Empfehlung für den Pitch: Schwellen-Vertrag und Ausstiegsklausel kosten den Betreiber wenig, nehmen aber genau die
 Angst, die die Zusage bremst. Eine Preisgarantie nur mit dem Betreiber gemeinsam festlegen.
