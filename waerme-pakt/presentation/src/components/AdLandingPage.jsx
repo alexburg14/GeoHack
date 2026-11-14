@@ -6,6 +6,7 @@ import NeighborhoodPage from './NeighborhoodPage';
 import GuaranteeSlides from './GuaranteeSlides';
 import GenossenschaftPage from './GenossenschaftPage';
 import MitgliederPage from './MitgliederPage';
+import FragenPage from './FragenPage';
 import { STREETS, PHASES, findStreet, areaOfStreet } from '../data/town';
 import { compare, connectionYear, START_YEAR, YEARS, ASSUMPTIONS_NOTE } from '../data/costModel';
 import './landing.css';
@@ -67,8 +68,10 @@ const isAddressComplete = (street, houseNo, zip) =>
 const stopKeys = (e) => e.stopPropagation();
 
 export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
-  // Pages: 'home', 'pruefen' (step 1), 'rechnen' (step 2), 'ergebnis', 'nachbarschaft', 'genossenschaft', 'mitglieder', 'about'
+  // Pages: 'home', 'pruefen' (step 1), 'rechnen' (step 2), 'ergebnis', 'nachbarschaft', 'genossenschaft', 'mitglieder', 'fragen', 'about'
   const [page, setPage] = useState('home');
+  const [chat, setChat] = useState([]); // advisor conversation, kept across tab switches
+  const [portalTab, setPortalTab] = useState('fortschritt');
   const mainRef = useRef(null);
   // Each page starts at the top.
   useEffect(() => {
@@ -162,6 +165,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
     { id: 'pruefen', num: '1', label: 'Prüfen', done: addressDone, enabled: true },
     { id: 'rechnen', num: '2', label: 'Rechnen', done: hasResult, enabled: addressDone },
     { id: 'ergebnis', num: '✓', label: 'Ergebnis', done: false, enabled: hasResult },
+    { id: 'fragen', num: '?', label: 'Fragen', done: false, enabled: true },
   ];
   const links = [
     { id: 'nachbarschaft', label: 'Nachbarschaft' },
@@ -243,7 +247,10 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
               key={l.id}
               type="button"
               className={`link ${page === l.id ? 'active' : ''}`}
-              onClick={() => setPage(l.id)}
+              onClick={() => {
+                if (l.id === 'mitglieder') setPortalTab('fortschritt');
+                setPage(l.id);
+              }}
             >
               {l.label}
             </button>
@@ -561,16 +568,34 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
           <GenossenschaftPage
             key="genossenschaft"
             demandKwh={hasResult ? result.waermebedarf_kwh : null}
-            onOpenPortal={() => setPage('mitglieder')}
+            onOpenPortal={() => { setPortalTab('fortschritt'); setPage('mitglieder'); }}
           />
         )}
 
         {/* MITGLIEDERPORTAL */}
         {page === 'mitglieder' && (
           <MitgliederPage
-            key="mitglieder"
+            key={`mitglieder-${portalTab}`}
+            initialTab={portalTab}
             demandKwh={hasResult ? result.waermebedarf_kwh : null}
             onCheckAddress={() => setPage('pruefen')}
+          />
+        )}
+
+        {/* FRAGEN: der KI-Berater aus der Wärme-Pakt-App */}
+        {page === 'fragen' && (
+          <FragenPage
+            key="fragen"
+            street={addressDone && matchedStreet ? matchedStreet.name : null}
+            houseNo={houseNo.trim()}
+            outsideNetwork={addressDone && !matchedStreet}
+            connection={matchedStreet ? `${matchedStreet.expectedConnection} (${PHASES[matchedStreet.phase].label})` : ''}
+            inputs={hasResult ? inputs : null}
+            houseLabel={`${selectedBuilding.label}, Baujahr ${inputs.baujahr}, ${inputs.wohnflaeche} m², ${selectedHeating.label} (${inputs.heizungsalter} Jahre)`}
+            chat={chat}
+            setChat={setChat}
+            onCheckAddress={() => setPage('pruefen')}
+            onReportProblem={() => { setPortalTab('stoerung'); setPage('mitglieder'); }}
           />
         )}
 

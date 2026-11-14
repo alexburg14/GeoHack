@@ -30,9 +30,14 @@ damit die Live-Demo nie hängen bleibt.
 
 „Demo zurücksetzen“ (Fußzeile) stellt die Zusagen wieder auf den Ausgangsstand.
 
-**Mitgliederportal** (in der Präsentation, letzte Folie): Suche → Anzeige klicken → „Mitglieder“ in der Kopfzeile
+**Fragen** (in der Such-Demo, Kopfzeile „? Fragen“): derselbe KI-Berater wie in Schritt 3 der App, über `/api/chat`.
+Die Such-Demo braucht dafür den laufenden Python-Server: im Build (`/presentation/` auf Port 8000) dieselbe Adresse,
+im Vite-Dev-Server leitet `vite.config.js` `/api` an `http://127.0.0.1:8000` weiter.
+
+**Mitgliederportal** (in der Such-Demo unter `/presentation/`): Suche → Anzeige klicken → „Mitglieder“ in der Kopfzeile
 (oder nach „Beitritt bestätigen“ auf „Genossenschaft“). Familie Huber als Mitglied: Fortschritt bis zum Wärmerabatt,
-Zahlungen (weitere Anteile in Raten, Bankverbindung), Nachbarn werben. „Zusage simulieren (Demo)“ lässt eine
+Zahlungen (weitere Anteile in Raten, Bankverbindung), Nachbarn werben, Störung melden (Wartegarantie: Übergangsheizung
+bei Ausfall vor dem Anschluss; „Status weiter (Demo)“ führt durch Rückruf, Termin, Übergangsheizung). „Zusage simulieren (Demo)“ lässt eine
 Einladung zusagen, das Ausbaugebiet rückt näher an die Schwelle. Rabatt-Regel in `config/assumptions.json`
 („genossenschaft“), Demo-Mitglied in `data/genossenschaft.json`.
 
@@ -45,9 +50,9 @@ lib/advisor.py          KI-Berater (Claude Messages API über urllib) + Offline-
 config/assumptions.json ALLE Preise und Faktoren (Platzhalter!), in der App unter „Annahmen“ sichtbar
 data/streets.json       20 Straßen: echte OSM-Geometrie, Demo-Haushalte/Zusagen/Bauphasen
 data/updates.json       Baufortschritt (Demo)
-presentation/           Spectacle-Präsentation (React + Vite, Build nach static/presentation/)
+presentation/           Such-Demo: Google-Suche → Anzeige → EnergiePlus-Seite (React + Vite, Build nach static/presentation/)
 static/                 Frontend (HTML, CSS, JS)
-static/presentation/    Gebaute Spectacle-Präsentation (unter /presentation/ erreichbar)
+static/presentation/    Gebaute Such-Demo (unter /presentation/ erreichbar)
 tests/                  Unit-Tests des Kostenmodells
 tools/build_streets.py  erzeugt data/streets.json aus einem Overpass-Export
 ```

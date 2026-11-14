@@ -12,6 +12,7 @@ import {
   memberDiscount,
 } from '../data/genossenschaft';
 import UPDATES from '../../../data/updates.json';
+import StoerungMelden from './StoerungMelden';
 import './mitglieder.css';
 
 // Member portal of the Wärme-Genossenschaft: progress, payments, referrals for the demo member (Familie Huber).
@@ -56,6 +57,7 @@ const TABS = [
   { id: 'fortschritt', label: 'Fortschritt' },
   { id: 'zahlungen', label: 'Zahlungen' },
   { id: 'werben', label: 'Nachbarn werben' },
+  { id: 'stoerung', label: 'Störung melden' },
 ];
 
 function AreaBar({ area, extra = 0 }) {
@@ -78,13 +80,14 @@ function AreaBar({ area, extra = 0 }) {
   );
 }
 
-export default function MitgliederPage({ demandKwh, onCheckAddress }) {
-  const [tab, setTab] = useState('fortschritt');
+export default function MitgliederPage({ demandKwh, onCheckAddress, initialTab = 'fortschritt' }) {
+  const [tab, setTab] = useState(initialTab);
   const [shares, setShares] = useState(DEMO_MEMBER.anteile);
   const [payments, setPayments] = useState(DEMO_MEMBER.zahlungen);
   const [raised, setRaised] = useState(DEMO_RAISED);
   const [bank, setBank] = useState({ iban: DEMO_MEMBER.iban, holder: DEMO_MEMBER.kontoinhaber });
   const [referrals, setReferrals] = useState(DEMO_MEMBER.empfehlungen);
+  const [tickets, setTickets] = useState(DEMO_MEMBER.meldungen);
   const [toast, setToast] = useState('');
   const toastTimer = useRef(null);
 
@@ -192,6 +195,35 @@ export default function MitgliederPage({ demandKwh, onCheckAddress }) {
   const inviteLink = `https://waerme-pakt.example.de/?von=empfehlung&code=${DEMO_MEMBER.nummer}`;
   const copyLink = () => {
     navigator.clipboard?.writeText(inviteLink).then(() => flash('Link kopiert.'), () => {});
+  };
+
+  /* ---------- Störung melden ---------- */
+  const reportProblem = ({ art, text, uebergang, erreichbar }) => {
+    const nummer = `WP-${new Date().getFullYear()}-${1000 + Math.floor(Math.random() * 9000)}`;
+    const when = erreichbar === 'Jederzeit' ? 'so schnell wie möglich' : erreichbar.toLowerCase();
+    setTickets((ts) => [...ts, {
+      nummer, datum: iso(new Date()), art, text, uebergang, stufe: 1,
+      naechster: `Ein Techniker aus ${TOWN} ruft Sie ${when} zurück und vereinbart einen Termin.`,
+    }]);
+    flash(`Meldung ${nummer} ist eingegangen. Wir rufen Sie zurück.`);
+  };
+  // Presenter control: move a ticket one step forward
+  const advanceTicket = (nummer) => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    setTickets((ts) => ts.map((t) => {
+      if (t.nummer !== nummer) return t;
+      const stufe = t.stufe + 1;
+      if (stufe === 2) return { ...t, stufe, naechster: `Techniker-Termin am ${day(tomorrow)} zwischen 8 und 12 Uhr.` };
+      if (stufe === 3 && t.uebergang)
+        return { ...t, stufe, naechster: 'Die mobile Heizzentrale steht vor Ihrem Haus. Sie zahlen nur die Wärme, die Sie verbrauchen.' };
+      return {
+        ...t, stufe: t.uebergang ? 4 : 3, naechster: null,
+        loesung: t.uebergang
+          ? `Übergangsheizung läuft bis zu Ihrem Anschluss ${street.expectedConnection}. Ihre Zusage bleibt bestehen.`
+          : 'Störung behoben.',
+      };
+    }));
   };
 
   return (
@@ -440,6 +472,10 @@ export default function MitgliederPage({ demandKwh, onCheckAddress }) {
             )}
           </div>
         </div>
+      )}
+
+      {tab === 'stoerung' && (
+        <StoerungMelden heating={DEMO_MEMBER.heizung} tickets={tickets} onSubmit={reportProblem} onAdvance={advanceTicket} />
       )}
 
       {toast && <div className="mp-toast" role="status">{toast}</div>}
