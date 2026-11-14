@@ -70,14 +70,9 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
   const [chat, setChat] = useState([]); // advisor conversation, kept across tab switches
   const [portalTab, setPortalTab] = useState('fortschritt');
   const mainRef = useRef(null);
-  // On phones the nav scrolls sideways: keep the active tab visible.
-  useEffect(() => {
-    const nav = document.querySelector('.ep-nav');
-    const active = nav?.querySelector('button.active');
-    if (nav && active && nav.scrollWidth > nav.clientWidth) {
-      nav.scrollTo({ left: active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2, behavior: 'smooth' });
-    }
-  }, [page]);
+  // Phone menu (the nav is a drop-down there); closes whenever a page is chosen
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => setMenuOpen(false), [page]);
   // Each page starts at the top.
   useEffect(() => {
     if (mainRef.current) mainRef.current.scrollTop = 0;
@@ -108,7 +103,6 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
   const [hasResult, setHasResult] = useState(false);
   // "What if" price factors from the result page (empty = assumptions.json).
   const [factors, setFactors] = useState({});
-  const [requestSent, setRequestSent] = useState(false);
 
   const addressOk = isAddressComplete(street, houseNo, zipCode);
   const matchedStreet = findStreet(street);
@@ -139,7 +133,6 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
 
   const showResult = () => {
     setHasResult(true);
-    setRequestSent(false);
     setPage('ergebnis');
   };
 
@@ -149,7 +142,6 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
     setZipCode('');
     setAddressDone(false);
     setHasResult(false);
-    setRequestSent(false);
     setPage('pruefen');
   };
 
@@ -241,7 +233,16 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
             <small>Fernwärme-Check</small>
           </span>
         </button>
-        <nav className="ep-nav">
+        <button
+          type="button"
+          className="ep-menu-btn"
+          aria-expanded={menuOpen}
+          aria-controls="ep-nav"
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span aria-hidden="true">{menuOpen ? '✕' : '☰'}</span> Menü
+        </button>
+        <nav id="ep-nav" className={`ep-nav ${menuOpen ? 'open' : ''}`}>
           {steps.map((s) => (
             <button
               key={s.id}
@@ -270,6 +271,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
           ))}
         </nav>
       </header>
+      {menuOpen && <div className="ep-menu-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
 
       <div ref={mainRef} className={`ep-main ${page === 'home' ? 'flush' : ''}`}>
         {/* STARTSEITE: die Garantien als Slideshow, darunter die Nachbarschaft */}
@@ -277,6 +279,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
           <div className="ep-home" key="home">
             <GuaranteeSlides
               onStart={() => setPage('pruefen')}
+              onJoin={() => setPage('genossenschaft')}
               pledgedTotal={TOTAL_PLEDGED}
               onNeighbourhood={() =>
                 mainRef.current?.scrollTo({ top: mainRef.current.querySelector('.ep-home-section').offsetTop, behavior: 'smooth' })
@@ -554,8 +557,8 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                 <button type="button" className="ep-btn ghost" onClick={restart}>
                   Neuen Check starten
                 </button>
-                <button type="button" className="ep-btn primary" onClick={() => setRequestSent(true)}>
-                  {requestSent ? '✓ Beratung angefordert' : 'Kostenloses Angebot →'}
+                <button type="button" className="ep-btn primary" onClick={() => setPage('genossenschaft')}>
+                  Jetzt Genosse werden →
                 </button>
               </div>
             </div>

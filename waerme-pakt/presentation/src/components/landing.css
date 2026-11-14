@@ -406,3 +406,12 @@
 .ep-verdict { display: flex; gap: 12px; align-items: center; background: #d8ede5; color: var(--ok); border-radius: 14px; padding: 14px 18px; font-size: 15px; }
 .ep-verdict > span { display: grid; place-items: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--ok); color: #fff; font-weight: 800; }
 .ep .ep-verdict p { line-height: 1.45; }
+
+/* Menu button: only shown on phones (mobile.css) */
+.ep-menu-btn { display: none; align-items: center; gap: 8px; border: 1px solid rgba(246, 241, 234, 0.3); background: transparent; color: var(--paper);
+  border-radius: 999px; padding: 8px 14px; font: 600 15px Inter, Arial, sans-serif; cursor: pointer; }
+.ep-menu-btn span { font-size: 17px; line-height: 1; }
+/* Slide position dots: only on phones, where the list of reasons is hidden (mobile.css) */
+.ep-gdots { display: none; gap: 6px; align-items: center; margin-right: auto; }
+.ep-gdots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(246, 241, 234, 0.3); transition: width 0.3s, background 0.3s; }
+.ep-gdots i.on { width: 22px; border-radius: 4px; background: var(--hot); }

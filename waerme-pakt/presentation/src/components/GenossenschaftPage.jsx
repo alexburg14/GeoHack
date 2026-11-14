@@ -147,7 +147,7 @@ export default function GenossenschaftPage({ demandKwh, onOpenPortal }) {
 
           {stage === 'info' && (
             <button type="button" className="ep-btn primary" style={{ width: '100%' }} onClick={() => setStage('confirm')}>
-              Mitglied werden
+              Jetzt Genosse werden
             </button>
           )}
           {stage === 'confirm' && (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-// The four arguments for geothermal district heating, as an auto-playing slideshow on the home page.
+// The five arguments for geothermal district heating, as an auto-playing slideshow on the home page.
 // CO₂ figures match the cost comparison (example house, 20 years): geothermal 26 t, heat pump 41 t, gas 100 t.
 const GUARANTEES = [
   {
@@ -27,11 +27,17 @@ const GUARANTEES = [
     icon: '📉',
     detail: 'Über 20 Jahre rund 26 t statt 100 t CO₂ für ein typisches Einfamilienhaus (Wärmepumpe: rund 41 t).',
   },
+  {
+    title: 'Warm bis zum Anschluss',
+    text: 'Geht Ihre alte Heizung vorher kaputt, helfen wir sofort.',
+    icon: '🛠️',
+    detail: 'Mit unserer Wartegarantie bekommen Sie eine Übergangsheizung (mobile Heizzentrale oder Mietkessel) ohne Investition, bis Ihr Haus am Netz ist. Sie zahlen nur die Wärme, die Sie verbrauchen. Einen neuen Gaskessel brauchen Sie nicht.',
+  },
 ];
 
 const AUTOPLAY_MS = 5000;
 
-export default function GuaranteeSlides({ onStart, onNeighbourhood, pledgedTotal }) {
+export default function GuaranteeSlides({ onStart, onJoin, onNeighbourhood, pledgedTotal }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -44,11 +50,16 @@ export default function GuaranteeSlides({ onStart, onNeighbourhood, pledgedTotal
   const go = (i) => setIndex((i + GUARANTEES.length) % GUARANTEES.length);
   const g = GUARANTEES[index];
 
+  // Pause only for a real mouse: on phones a tap fires "enter" without a matching "leave"
   return (
-    <section className="ep-guarantees hero" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <section
+      className="ep-guarantees hero"
+      onPointerEnter={(e) => e.pointerType === 'mouse' && setPaused(true)}
+      onPointerLeave={(e) => e.pointerType === 'mouse' && setPaused(false)}
+    >
       <div className="ep-guarantees-intro">
         <p className="eyebrow">Geothermie-Fernwärme für Starnberg</p>
-        <h2>Vier gute Gründe für Erdwärme</h2>
+        <h2>Fünf gute Gründe für Geothermie</h2>
         <ol className="ep-gnav">
           {GUARANTEES.map((item, i) => (
             <li key={item.title}>
@@ -64,8 +75,13 @@ export default function GuaranteeSlides({ onStart, onNeighbourhood, pledgedTotal
         </ol>
         {onStart && (
           <div className="ep-gcta">
-            <button type="button" className="ep-btn primary big" onClick={onStart}>
-              Adresse prüfen <span aria-hidden="true">→</span>
+            {onJoin && (
+              <button type="button" className="ep-btn primary big" onClick={onJoin}>
+                Jetzt Genosse werden <span aria-hidden="true">→</span>
+              </button>
+            )}
+            <button type="button" className={`ep-btn ${onJoin ? 'ghost' : 'primary'} big`} onClick={onStart}>
+              Adresse prüfen
             </button>
             {pledgedTotal ? (
               <button type="button" className="ep-gproof" onClick={onNeighbourhood}>
@@ -85,6 +101,9 @@ export default function GuaranteeSlides({ onStart, onNeighbourhood, pledgedTotal
         <p className="claim">{g.text}</p>
         <p className="detail">{g.detail}</p>
         <div className="ep-gslide-foot">
+          <span className="ep-gdots" aria-hidden="true">
+            {GUARANTEES.map((item, i) => <i key={item.title} className={i === index ? 'on' : ''} />)}
+          </span>
           <span className="arrows">
             <button type="button" aria-label="Vorheriges Argument" onClick={() => go(index - 1)}>
               ←

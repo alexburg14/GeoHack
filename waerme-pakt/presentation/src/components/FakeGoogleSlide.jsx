@@ -63,7 +63,10 @@ export default function FakeGoogleSlide() {
   const [inputValue, setInputValue] = useState('');
   const [searchData, setSearchData] = useState(null);
   const [showAnatomy, setShowAnatomy] = useState(false);
-  const [activeAdPage, setActiveAdPage] = useState(null);
+  // On phones the demo skips the Google search and opens the Fernwärme page directly
+  const [activeAdPage, setActiveAdPage] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 700px)').matches ? 'Direktaufruf (Smartphone)' : null,
+  );
 
   const runSearch = (queryText) => {
     const cleaned = (queryText ?? inputValue).trim();

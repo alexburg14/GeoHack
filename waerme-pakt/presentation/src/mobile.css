@@ -15,12 +15,17 @@ html, body, #root { height: 100%; }
   .gs-anatomy { display: none; }
   .gs-results { grid-template-columns: minmax(0, 1fr) !important; padding: 12px !important; gap: 16px !important; }
 
-  /* EnergiePlus: fake browser bar, top bar, scrolling nav */
-  .ep-browser .url, .ep-browser .tag, .ep-browser .dots { display: none; }
-  .ep-top { flex-wrap: wrap; gap: 8px; padding: 10px 12px 6px; }
-  .ep-nav { width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; padding-bottom: 4px; }
-  .ep-nav::-webkit-scrollbar { display: none; }
-  .ep-nav button { flex: 0 0 auto; white-space: nowrap; padding: 6px 10px; font-size: 13.5px; }
+  /* EnergiePlus: no fake browser bar; nav becomes a drop-down behind the menu button */
+  .ep-browser { display: none; }
+  .ep-top { position: relative; padding: 10px 14px; }
+  .ep-menu-btn { display: inline-flex; }
+  .ep-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 70; flex-direction: column; align-items: stretch; gap: 2px;
+    background: var(--ink); padding: 6px 12px 14px; box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35); }
+  .ep-nav.open { display: flex; }
+  .ep-nav button, .ep-nav button.link { width: 100%; justify-content: flex-start; padding: 12px 12px; font-size: 16px; border-radius: 12px; }
+  .ep-nav button.link.active { background: var(--paper); color: var(--ink); box-shadow: none; border-radius: 12px; }
+  .ep-nav .sep { width: 100%; height: 1px; margin: 6px 0; }
+  .ep-menu-backdrop { position: absolute; inset: 0; z-index: 65; background: rgba(34, 28, 24, 0.35); }
   .ep-main { padding: 16px 14px 28px; }
   .ep h1 { font-size: 26px; }
   .ep-card { padding: 16px; }
@@ -36,14 +41,25 @@ html, body, #root { height: 100%; }
   .ep-table-wrap { overflow-x: auto; }
   .ep-coop-hero, .mp-hero { padding: 20px; }
 
-  /* Home: argument slideshow */
-  .ep-guarantees, .ep-guarantees.hero { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 24px 16px 16px; min-height: 0; }
-  .ep-guarantees.hero h2, .ep-guarantees h2 { font-size: 30px; margin-bottom: 16px; }
-  .ep-guarantees.hero .ep-gslide, .ep-gslide { min-height: 0; padding: 24px 22px 20px; border-radius: 18px; }
-  .ep-gslide .big-n { font-size: 52px; }
-  .ep-gslide .icon { font-size: 34px; }
-  .ep-gslide h3 { font-size: 24px; }
+  /* Home: only the rotating slide, filling the first screen; the next section follows on scroll.
+     The intro wrapper dissolves (display: contents) so heading, slide and buttons can be ordered. */
+  .ep-guarantees.hero { display: flex; flex-direction: column; gap: 14px; min-height: 100%; padding: 18px 16px 14px; }
+  .ep-guarantees-intro { display: contents; }
+  .ep-guarantees .eyebrow { order: 1; margin-bottom: -8px; }
+  .ep-guarantees.hero h2 { order: 2; font-size: 27px; margin: 0; }
+  .ep-gnav { display: none; }
+  .ep-guarantees.hero .ep-gslide { order: 3; flex: 1; min-height: 0; padding: 22px 20px 18px; border-radius: 18px; }
+  .ep-gcta { order: 4; margin-top: 0; gap: 10px; }
+  .ep-gcta .ep-btn.big { flex: 1 1 auto; font-size: 15.5px; padding: 14px 16px; }
+  .ep-gproof { flex-basis: 100%; text-align: center; }
+  .ep-gnote { order: 5; font-size: 11px; }
+  .ep-gdots { display: flex; }
+  .ep-gslide .big-n { font-size: 46px; }
+  .ep-gslide .icon { font-size: 32px; }
+  .ep-gslide h3 { font-size: 24px; margin: 10px 0 8px; }
   .ep-gslide .claim { font-size: 17px; }
+  .ep-gslide .detail { font-size: 14px; margin-top: 10px; }
+  .ep-gslide-foot { padding-top: 16px; }
   .ep-home-section { padding: 28px 14px 36px; }
 
   /* Member portal */
@@ -67,4 +83,19 @@ html, body, #root { height: 100%; }
   .ep-house-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ep-askhint { left: 12px; right: 12px; bottom: 12px; width: auto; }
   .ep .ep-select { font-size: 16px; }
+}
+
+/* Short phones (e.g. iPhone SE): keep heading, slide and buttons on the first screen */
+@media (max-width: 700px) and (max-height: 720px) {
+  .ep-guarantees .eyebrow, .ep-gnote { display: none; }
+  .ep-guarantees.hero { gap: 12px; padding-top: 14px; }
+  .ep-guarantees.hero h2 { font-size: 24px; }
+  .ep-gcta { flex-wrap: nowrap; }
+  .ep-gcta .ep-btn.big { padding: 13px 10px; font-size: 14.5px; }
+  .ep-gcta .ep-btn.big span { display: none; }
+  .ep-gproof { display: none; }
+  .ep-gslide .big-n { font-size: 38px; }
+  .ep-gslide h3 { font-size: 22px; }
+  .ep-gslide .claim { font-size: 16px; }
+  .ep-gslide .detail { font-size: 13.5px; }
 }
