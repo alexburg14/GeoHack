@@ -73,6 +73,14 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
   const [chat, setChat] = useState([]); // advisor conversation, kept across tab switches
   const [portalTab, setPortalTab] = useState('fortschritt');
   const mainRef = useRef(null);
+  // On phones the nav scrolls sideways: keep the active tab visible.
+  useEffect(() => {
+    const nav = document.querySelector('.ep-nav');
+    const active = nav?.querySelector('button.active');
+    if (nav && active && nav.scrollWidth > nav.clientWidth) {
+      nav.scrollTo({ left: active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2, behavior: 'smooth' });
+    }
+  }, [page]);
   // Each page starts at the top.
   useEffect(() => {
     if (mainRef.current) mainRef.current.scrollTop = 0;

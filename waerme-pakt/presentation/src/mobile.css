@@ -1,0 +1,65 @@
+/* Layout shell and phone layout. Desktop keeps the framed "browser window" look;
+   on phones (≤ 700px) the demo fills the screen and every multi-column layout stacks.
+   Some components use inline styles, so a few rules need !important. */
+.app-shell { height: 100%; padding: 28px; background: #221c19; }
+html, body, #root { height: 100%; }
+@supports (height: 100dvh) { html, body, #root { height: 100dvh; } }
+
+@media (max-width: 700px) {
+  .app-shell { padding: 0; }
+  .app-shell > div, .ep { border-radius: 0 !important; box-shadow: none !important; }
+
+  /* Google results */
+  .gs-header { flex-wrap: wrap; gap: 10px !important; padding: 10px 12px !important; }
+  .gs-form { flex: 1 1 100% !important; max-width: none !important; order: 3; }
+  .gs-anatomy { display: none; }
+  .gs-results { grid-template-columns: minmax(0, 1fr) !important; padding: 12px !important; gap: 16px !important; }
+
+  /* EnergiePlus: fake browser bar, top bar, scrolling nav */
+  .ep-browser .url, .ep-browser .tag, .ep-browser .dots { display: none; }
+  .ep-top { flex-wrap: wrap; gap: 8px; padding: 10px 12px 6px; }
+  .ep-nav { width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; padding-bottom: 4px; }
+  .ep-nav::-webkit-scrollbar { display: none; }
+  .ep-nav button { flex: 0 0 auto; white-space: nowrap; padding: 6px 10px; font-size: 13.5px; }
+  .ep-main { padding: 16px 14px 28px; }
+  .ep h1 { font-size: 26px; }
+  .ep-card { padding: 16px; }
+
+  /* Stack all multi-column layouts */
+  .ep-grid2, .ep-grid3, .ep-split, .ep-mapgrid, .ep-options, .ep-coop-hero, .ep-factors-body, .ep-story-body, .ep-ar,
+  .mp-hero, .mp-grid, .mp-grid.even, .fr-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .ep-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ep-address { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ep-address > :first-child { grid-column: 1 / -1; }
+  .ep-hero, .ep-rec { flex-direction: column; align-items: stretch; }
+  .ep-map { height: 340px; }
+  .ep-table-wrap { overflow-x: auto; }
+  .ep-coop-hero, .mp-hero { padding: 20px; }
+
+  /* Home: argument slideshow */
+  .ep-guarantees, .ep-guarantees.hero { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 24px 16px 16px; min-height: 0; }
+  .ep-guarantees.hero h2, .ep-guarantees h2 { font-size: 30px; margin-bottom: 16px; }
+  .ep-guarantees.hero .ep-gslide, .ep-gslide { min-height: 0; padding: 24px 22px 20px; border-radius: 18px; }
+  .ep-gslide .big-n { font-size: 52px; }
+  .ep-gslide .icon { font-size: 34px; }
+  .ep-gslide h3 { font-size: 24px; }
+  .ep-gslide .claim { font-size: 17px; }
+  .ep-home-section { padding: 28px 14px 36px; }
+
+  /* Member portal */
+  .mp-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mp-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .mp-tabs button { flex: 0 0 auto; }
+  .mp-demo { display: none; }
+  .mp-problems { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mp-ledger th:nth-child(2), .mp-ledger td:nth-child(2) { display: none; }
+  .mp-updates li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+
+  /* Advisor chat */
+  .fr-chat { min-height: 0; }
+  .fr-log { max-height: 50vh; }
+  .fr-msg { max-width: 92%; }
+
+  /* Inputs: 16px stops iOS from zooming into the field */
+  .ep input.text, .ep .mp-textarea, .ep .mp-select, .gs-form input { font-size: 16px !important; }
+}

@@ -5,7 +5,7 @@ import FakeGoogleSlide from './components/FakeGoogleSlide';
 // (address check, cost comparison, Nachbarschaft, Genossenschaft, member portal). Fills the whole window.
 export default function App() {
   return (
-    <div style={{ height: '100%', padding: 28, background: '#221c19' }}>
+    <div className="app-shell">
       <FakeGoogleSlide />
     </div>
   );

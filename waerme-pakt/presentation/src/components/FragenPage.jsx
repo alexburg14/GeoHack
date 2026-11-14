@@ -5,10 +5,22 @@ import './fragen.css';
 // The server builds the context from address and house data and answers with Claude, or offline without an API key.
 // In development Vite proxies /api to the Python server (vite.config.js); in the build both share one origin.
 
+// Prepared questions with the team's answers: shown instantly, without asking the server.
+// Free questions typed into the field still go to the advisor (/api/chat).
 const QUESTIONS = [
-  'Was passiert, wenn meine Heizung vorher kaputtgeht?',
-  'Warum dauert das bis zum Anschluss so lange?',
-  'Ist eine Wärmepumpe nicht günstiger?',
+  {
+    q: 'Meine Gasheizung ist schon 20 Jahre alt – was passiert, wenn sie in den 5 Jahren kaputtgeht?',
+    a: 'Kein Problem! Mit Ihrem Vorvertrag greift ab Tag 1 unsere Havarie-Garantie: Fällt Ihre alte Heizung vor dem Anschluss aus, übernehmen wir die Reparatur oder stellen Ihnen kostenlos ein mobiles Heizmodul / eine Miet-Wärmepumpe bereit, bis die Leitung liegt. Ihr Risiko liegt bei 0 €.',
+    ticket: true,
+  },
+  {
+    q: 'Warum soll ich 5 Jahre warten, wenn ich innerhalb von 3 Monaten eine Wärmepumpe einbauen lassen kann?',
+    a: 'Weil Sie über 20 Jahre rund 30.000 € sparen: Sie zahlen dank Early-Bird-Bonus fast nichts für den Hausanschluss, brauchen keine teure Altbau-Sanierung (Fußbodenheizung) und müssen nach 16 Jahren keine zweite Wärmepumpe für 18.000 € kaufen.',
+  },
+  {
+    q: 'Was passiert, wenn bei der Bohrung gar kein heißes Wasser gefunden wird?',
+    a: 'Das geologische Bohrrisiko tragen ausschließlich wir als Versorger (abgesichert über eine staatliche Fündigkeitsversicherung). Sollte das Projekt wider Erwarten nicht realisiert werden, erlischt Ihr Vorvertrag automatisch und völlig kostenfrei für Sie.',
+  },
 ];
 
 const stopKeys = (e) => e.stopPropagation();
@@ -38,6 +50,12 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [chat]);
+
+  // Prepared question: question and answer appear at once, the answer pops in.
+  const ask = ({ q, a, ticket }) => {
+    if (busy) return;
+    setChat((c) => [...c, { role: 'user', content: q, local: true }, { role: 'assistant', content: a, local: true, ticket, pop: true }]);
+  };
 
   const send = async (raw) => {
     const question = raw.trim();
@@ -103,7 +121,7 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
               </div>
             )}
             {chat.map((m, i) => (
-              <div key={i} className={`fr-msg ${m.role} ${m.typing ? 'typing' : ''}`}>
+              <div key={i} className={`fr-msg ${m.role} ${m.typing ? 'typing' : ''} ${m.pop ? 'pop' : ''}`}>
                 {m.content}
                 {m.ticket && (
                   <button type="button" className="ep-btn primary" onClick={onReportProblem}>Störung jetzt melden</button>
@@ -112,8 +130,8 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
             ))}
           </div>
           <div className="fr-chips">
-            {QUESTIONS.map((q) => (
-              <button key={q} type="button" onClick={() => send(q)} disabled={busy}>{q}</button>
+            {QUESTIONS.map((item) => (
+              <button key={item.q} type="button" onClick={() => ask(item)} disabled={busy}>{item.q}</button>
             ))}
           </div>
           <form className="fr-form" onSubmit={(e) => { e.preventDefault(); send(text); }}>

@@ -333,6 +333,7 @@ export default function FakeGoogleSlide() {
     >
       {/* Top Search Header */}
       <div
+        className="gs-header"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -363,6 +364,7 @@ export default function FakeGoogleSlide() {
             e.preventDefault();
             runSearch(inputValue);
           }}
+          className="gs-form"
           style={{ flex: 1, maxWidth: '520px' }}
         >
           <div
@@ -407,9 +409,10 @@ export default function FakeGoogleSlide() {
           </div>
         </form>
 
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+        <div className="gs-actions" style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
           <button
             type="button"
+            className="gs-anatomy"
             onClick={() => setShowAnatomy((prev) => !prev)}
             style={{
               border: showAnatomy ? '1px solid #ea4335' : '1px solid #dadce0',
@@ -445,7 +448,7 @@ export default function FakeGoogleSlide() {
 
       {/* Results Body */}
       <div
-        className="animate-fade-up"
+        className="animate-fade-up gs-results"
         style={{
           flex: 1,
           overflowY: 'auto',
