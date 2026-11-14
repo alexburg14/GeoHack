@@ -1,0 +1,24 @@
+{
+  "_hinweis": "Demodaten für Pitch und Mitgliederportal, keine echten Mitglieder.",
+  "mitglieder_gesamt": 1284,
+  "kapital_eur": 7900000,
+  "demo_mitglied": {
+    "nummer": "WG-0347",
+    "name": "Familie Huber",
+    "strasse": "Ottostraße",
+    "hausnummer": "12",
+    "mitglied_seit": "2026-10-02",
+    "anteile": 4,
+    "iban": "DE89370400440532013000",
+    "kontoinhaber": "Anna Huber",
+    "zahlungen": [
+      {"datum": "2026-10-05", "text": "Einlage 4 Anteile, Rate 1 von 2", "betrag": 1000, "status": "gebucht"},
+      {"datum": "2027-01-05", "text": "Einlage 4 Anteile, Rate 2 von 2", "betrag": 1000, "status": "geplant"}
+    ],
+    "empfehlungen": [
+      {"name": "Familie Brandl", "strasse": "Ottostraße", "hausnummer": "7", "datum": "2026-10-08", "status": "mitglied"},
+      {"name": "Herr Wiesinger", "strasse": "Ottostraße", "hausnummer": "21", "datum": "2026-10-20", "status": "zugesagt"},
+      {"name": "Frau Demir", "strasse": "Bismarckstraße", "hausnummer": "3", "datum": "2026-11-09", "status": "eingeladen"}
+    ]
+  }
+}

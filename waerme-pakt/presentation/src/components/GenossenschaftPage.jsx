@@ -6,6 +6,8 @@ import {
   DISCOUNT_PCT_PER_SHARE,
   DISCOUNT_PCT_MAX,
   EXAMPLE_DEMAND_KWH,
+  DEMO_MEMBERS,
+  DEMO_RAISED,
   memberDiscount,
 } from '../data/genossenschaft';
 import './genossenschaft.css';
@@ -19,16 +21,12 @@ const MAX_EUR = STAKE.hoechstbetrag_eur.wert;
 const NETWORK_EUR = STAKE.netz_investition_eur.wert;
 const CAP_EUR = (DISCOUNT_PCT_MAX / DISCOUNT_PCT_PER_SHARE) * SHARE_EUR; // stake that reaches the highest discount
 
-// Demo figures for the pitch (placeholders, not real membership data)
-const DEMO_MEMBERS = 1284;
-const DEMO_RAISED = 7.9e6;
-
 const eur = (n) => `${Math.round(n).toLocaleString('de-DE')} €`;
 const num = (n, digits = 0) => n.toLocaleString('de-DE', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const pctText = (n) => `${n.toLocaleString('de-DE')} %`;
 const stopKeys = (e) => e.stopPropagation();
 
-export default function GenossenschaftPage({ demandKwh }) {
+export default function GenossenschaftPage({ demandKwh, onOpenPortal }) {
   const [amount, setAmount] = useState(2000);
   const [stage, setStage] = useState('info'); // 'info' | 'confirm' | 'done'
 
@@ -180,6 +178,11 @@ export default function GenossenschaftPage({ demandKwh }) {
                 Mitglied Nr. {(DEMO_MEMBERS + 1).toLocaleString('de-DE')} · {eur(amount)} Einlage · {pctText(discount.pct)} Wärmerabatt für{' '}
                 {DISCOUNT_YEARS} Jahre (Demo)
               </p>
+              {onOpenPortal && (
+                <button type="button" className="ep-btn primary" style={{ marginTop: 10 }} onClick={onOpenPortal}>
+                  Zum Mitgliederportal →
+                </button>
+              )}
             </div>
           )}
         </div>

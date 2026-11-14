@@ -30,6 +30,12 @@ damit die Live-Demo nie hängen bleibt.
 
 „Demo zurücksetzen“ (Fußzeile) stellt die Zusagen wieder auf den Ausgangsstand.
 
+**Mitgliederportal** (in der Präsentation, letzte Folie): Suche → Anzeige klicken → „Mitglieder“ in der Kopfzeile
+(oder nach „Beitritt bestätigen“ auf „Genossenschaft“). Familie Huber als Mitglied: Fortschritt bis zum Wärmerabatt,
+Zahlungen (weitere Anteile in Raten, Bankverbindung), Nachbarn werben. „Zusage simulieren (Demo)“ lässt eine
+Einladung zusagen, das Ausbaugebiet rückt näher an die Schwelle. Rabatt-Regel in `config/assumptions.json`
+(„genossenschaft“), Demo-Mitglied in `data/genossenschaft.json`.
+
 ## Aufbau
 
 ```

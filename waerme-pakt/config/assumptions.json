@@ -85,6 +85,13 @@
     "rabatt_ab_eur": {"wert": 1000, "einheit": "€", "label": "Bonus ab Beteiligung von"},
     "netz_investition_eur": {"wert": 40000000, "einheit": "€", "label": "Investition Netzausbau (Demo)"}
   },
+  "genossenschaft": {
+    "status": "Vorschlag des Teams, noch nicht mit dem Betreiber abgestimmt",
+    "rabatt_prozent_pro_anteil": {"wert": 1, "einheit": "%", "label": "Rabatt auf den Wärmepreis pro Anteil"},
+    "rabatt_prozent_max": {"wert": 10, "einheit": "%", "label": "Höchster Rabatt (mehr Anteile bringen mehr Eigentum, nicht mehr Rabatt)"},
+    "rabatt_jahre": {"wert": 10, "einheit": "Jahre", "label": "Rabatt-Dauer ab Hausanschluss"},
+    "raten_max": {"wert": 4, "einheit": "Raten", "label": "Einlage zahlbar in bis zu so vielen Quartalsraten"}
+  },
   "zusage": {
     "status": "Vorschlag des Teams, noch nicht mit Geothermie Unterhaching abgestimmt",
     "bedingungen": [

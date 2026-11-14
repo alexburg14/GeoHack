@@ -5,6 +5,7 @@ import LongRunStory from './LongRunStory';
 import NeighborhoodPage from './NeighborhoodPage';
 import GuaranteeSlides from './GuaranteeSlides';
 import GenossenschaftPage from './GenossenschaftPage';
+import MitgliederPage from './MitgliederPage';
 import { STREETS, PHASES, findStreet, areaOfStreet } from '../data/town';
 import { compare, connectionYear, START_YEAR, YEARS, ASSUMPTIONS_NOTE } from '../data/costModel';
 import './landing.css';
@@ -66,7 +67,7 @@ const isAddressComplete = (street, houseNo, zip) =>
 const stopKeys = (e) => e.stopPropagation();
 
 export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
-  // Pages: 'home', 'pruefen' (step 1), 'rechnen' (step 2), 'ergebnis', 'nachbarschaft', 'genossenschaft', 'about'
+  // Pages: 'home', 'pruefen' (step 1), 'rechnen' (step 2), 'ergebnis', 'nachbarschaft', 'genossenschaft', 'mitglieder', 'about'
   const [page, setPage] = useState('home');
   const mainRef = useRef(null);
   // Each page starts at the top.
@@ -165,6 +166,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
   const links = [
     { id: 'nachbarschaft', label: 'Nachbarschaft' },
     { id: 'genossenschaft', label: 'Genossenschaft' },
+    { id: 'mitglieder', label: 'Mitglieder' },
     { id: 'about', label: 'Über uns' },
   ];
 
@@ -556,7 +558,20 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
 
         {/* GENOSSENSCHAFT */}
         {page === 'genossenschaft' && (
-          <GenossenschaftPage key="genossenschaft" demandKwh={hasResult ? result.waermebedarf_kwh : null} />
+          <GenossenschaftPage
+            key="genossenschaft"
+            demandKwh={hasResult ? result.waermebedarf_kwh : null}
+            onOpenPortal={() => setPage('mitglieder')}
+          />
+        )}
+
+        {/* MITGLIEDERPORTAL */}
+        {page === 'mitglieder' && (
+          <MitgliederPage
+            key="mitglieder"
+            demandKwh={hasResult ? result.waermebedarf_kwh : null}
+            onCheckAddress={() => setPage('pruefen')}
+          />
         )}
 
         {/* ÜBER UNS */}
