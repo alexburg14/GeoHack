@@ -33,16 +33,16 @@ class CostModelTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             cm.connection_year("bald")
 
-    def test_keep_replaces_boiler_once_at_end_of_life(self):
+    def test_keep_counts_new_boiler_per_year_it_runs(self):
         demand = cm.heat_demand_kwh(HUBER, self.a)
         keep = cm.scenario_keep(HUBER, self.a, demand)
-        self.assertEqual(keep["investition_eur"], 11000)
+        # 17-year-old boiler, 20-year lifetime: new boiler from year index 3, 17 of its 20 years inside the horizon
+        self.assertEqual(keep["investition_eur"], round(11000 * 17 / 20))
         yearly = [keep["kumuliert_eur"][0]] + [
             b - a for a, b in zip(keep["kumuliert_eur"], keep["kumuliert_eur"][1:])
         ]
-        # 17-year-old boiler with a 20-year lifetime is replaced in year index 3
-        self.assertGreater(yearly[3] - yearly[2], 10000)
-        self.assertLess(abs(yearly[4] - yearly[2]), 1000)
+        self.assertGreater(yearly[3] - yearly[2], 11000 / 20)
+        self.assertLess(yearly[3] - yearly[2], 11000 / 20 + 300)
 
     def test_district_uses_old_boiler_until_connection(self):
         demand = cm.heat_demand_kwh(HUBER, self.a)
@@ -50,15 +50,23 @@ class CostModelTest(unittest.TestCase):
         district = cm.scenario_district(HUBER, self.a, demand, 2029)
         self.assertEqual(district["jahre_bis_anschluss"], 3)
         self.assertEqual(district["kumuliert_eur"][:3], keep["kumuliert_eur"][:3])
-        # connection fee 9000 × 0.7 − 1500 early-signer discount
-        self.assertEqual(district["investition_eur"], 4800)
+        # connection fee 9000 × (1 − 50 % subsidy) − 1500 early-signer discount
+        self.assertEqual(district["investition_eur"], 3000)
 
     def test_heat_pump_adds_old_building_surcharge(self):
         demand = cm.heat_demand_kwh(HUBER, self.a)
         old = cm.scenario_heat_pump(HUBER, self.a, demand)
         new = cm.scenario_heat_pump({**HUBER, "baujahr": 2005}, self.a, demand)
-        self.assertEqual(old["investition_eur"], 15000 + 6000)
-        self.assertEqual(new["investition_eur"], 15000)
+        # 30000 × (1 − 50 %) now, plus the replacement after 15 years: 20000 / 15 for each of the last 5 years
+        replacement = round(20000 / 15 * 5)
+        self.assertEqual(old["investition_eur"], 15000 + 6000 + replacement)
+        self.assertEqual(new["investition_eur"], 15000 + replacement)
+
+    def test_geothermal_is_cheapest_for_typical_houses(self):
+        for baujahr, sanierung in [(1970, "unsaniert"), (1985, "unsaniert"), (1985, "teilsaniert"), (2005, "teilsaniert")]:
+            result = cm.compare({**HUBER, "baujahr": baujahr, "sanierung": sanierung}, self.a, 2029)
+            totals = {k: o["gesamt_eur"] for k, o in result["optionen"].items()}
+            self.assertEqual(min(totals, key=totals.get), "fernwaerme", (baujahr, sanierung, totals))
 
     def test_geothermal_has_lowest_co2(self):
         result = cm.compare(HUBER, self.a, 2029)

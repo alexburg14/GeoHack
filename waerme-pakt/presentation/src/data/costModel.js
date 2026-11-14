@@ -3,8 +3,8 @@
 // so the landing page and the Wärme-Pakt app always show the same results.
 // On top of the Python model: any horizon (e.g. 40 years, with devices replaced at the end of their
 // lifetime) and "what if" overrides for the price factors the user can move on the result page.
-// The Python model has no heat-pump replacement, so the 20-year totals only match while the
-// heat-pump lifetime is at least the 20-year horizon.
+// Both models count replacement units per year they run inside the horizon (cost / lifetime),
+// so the 20-year totals of the app and the landing page match.
 import assumptions from '../../../config/assumptions.json';
 
 const a = assumptions;
@@ -65,15 +65,14 @@ function scenarioKeep(inputs, demand, years) {
   const yearly = [];
   let co2Kg = 0;
   let invest = 0;
-  let age = inputs.heizungsalter;
   for (let i = 0; i < years; i += 1) {
     let [cost, co2] = fossilYear(inputs, demand, i);
-    if (age >= lifetime) {
-      cost += v('bestand', 'kesseltausch_eur');
-      invest += v('bestand', 'kesseltausch_eur');
-      age = 0;
+    // new boiler once the old one reaches its lifetime, counted per year it runs inside the horizon
+    if (inputs.heizungsalter + i >= lifetime) {
+      const share = v('bestand', 'kesseltausch_eur') / lifetime;
+      cost += share;
+      invest += share;
     }
-    age += 1;
     yearly.push(cost);
     co2Kg += co2;
   }
@@ -88,15 +87,17 @@ function scenarioHeatPump(inputs, demand, years) {
   const lifetime = v(w, 'lebensdauer');
   const yearly = [];
   let co2Kg = 0;
+  let replacements = 0;
   for (let i = 0; i < years; i += 1) {
     const priceCt = v(w, 'strompreis_ct') * (1 + v(w, 'preissteigerung')) ** i;
     const cost = (powerKwh * priceCt) / 100 + v(w, 'grundpreis_eur') + v(w, 'wartung_eur');
-    const replacement = i > 0 && i % lifetime === 0 ? v(w, 'ersatz_eur') : 0;
-    if (replacement) invest += replacement;
+    // new unit at the end of the lifetime (no subsidy), counted per year it runs inside the horizon
+    const replacement = i >= lifetime ? v(w, 'ersatz_eur') / lifetime : 0;
     yearly.push(cost + (i === 0 ? invest : 0) + replacement);
+    replacements += replacement;
     co2Kg += powerKwh * v('co2', 'faktor_strom') * (1 - v('co2', 'strom_rueckgang')) ** i;
   }
-  return summary(yearly, invest, co2Kg);
+  return summary(yearly, invest + replacements, co2Kg);
 }
 
 // Keep the old boiler until the connection year, then geothermal district heating.

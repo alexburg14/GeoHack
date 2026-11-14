@@ -41,7 +41,7 @@
     "grundpreis_eur": {"wert": 120, "einheit": "€/Jahr", "label": "Grundpreis Strom (Zähler)"},
     "preissteigerung": {"wert": 0.03, "einheit": "pro Jahr", "label": "Preissteigerung Strom (steigende Netzentgelte)", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
     "wartung_eur": {"wert": 150, "einheit": "€/Jahr", "label": "Wartung Wärmepumpe"},
-    "lebensdauer": {"wert": 20, "einheit": "Jahre", "label": "Lebensdauer Wärmepumpe (üblich 15–20 Jahre)"},
+    "lebensdauer": {"wert": 15, "einheit": "Jahre", "label": "Lebensdauer Wärmepumpe (üblich 15–20 Jahre)", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
     "ersatz_eur": {"wert": 20000, "einheit": "€", "label": "Neues Gerät nach Ende der Lebensdauer (ohne Förderung)"},
     "jaz": {
       "label": "Jahresarbeitszahl nach Baujahr",
@@ -58,7 +58,7 @@
   "fernwaerme": {
     "mischpreis_ct": {"wert": 16.43, "einheit": "ct/kWh", "label": "Wärmepreis inkl. Grundpreis (Vergleichswert Unterhaching)", "quelle": "Praxisforum Geothermie Bayern, Pressemitteilung Enerchange 13.02.2026 (Beispiel EFH, 27.000 kWh)"},
     "anschlusskosten_eur": {"wert": 9000, "einheit": "€", "label": "Hausanschluss und Übergabestation"},
-    "foerderquote": {"wert": 0.3, "einheit": "", "label": "Förderung Anschluss"},
+    "foerderquote": {"wert": 0.5, "einheit": "", "label": "Förderung Anschluss (je nach Fall 30–70 %)", "quelle": "BEG Einzelmaßnahmen: 30 % Grundförderung + 20 % Klimageschwindigkeitsbonus beim Tausch einer alten Gasheizung, wie bei der Wärmepumpe angesetzt"},
     "fruehzeichner_rabatt_eur": {"wert": 1500, "einheit": "€", "label": "Rabatt für frühe Zusage"},
     "preissteigerung": {"wert": 0.015, "einheit": "pro Jahr", "label": "Preissteigerung Fernwärme (Geothermie: vor allem Fixkosten)", "quelle": "Expertenrunde Hackathon 13.11.2026, zu bestätigen"},
     "wartung_eur": {"wert": 60, "einheit": "€/Jahr", "label": "Wartung Übergabestation"},

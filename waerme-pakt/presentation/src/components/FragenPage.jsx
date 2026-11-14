@@ -18,8 +18,22 @@ const QUESTIONS = [
     a: 'Weil Sie über 20 Jahre rund 30.000 € sparen: Sie zahlen dank Early-Bird-Bonus fast nichts für den Hausanschluss, brauchen keine teure Altbau-Sanierung (Fußbodenheizung) und müssen nach 16 Jahren keine zweite Wärmepumpe für 18.000 € kaufen.',
   },
   {
+    q: 'Wie lange dauert es genau, bis der Ausbau der Wärmenetze in meiner Straße beginnt?',
+    a: 'Wenn Sie bereits Teil der BürgerWärme Genossenschaft sind, können Sie unter „Mitglieder“ Ihre persönliche Adresse eingeben: Dort sehen Sie den genauen Zeitplan für Ihren Distrikt inklusive aller Meilensteine von der Genehmigung bis zum Hausanschluss.',
+    portal: true,
+  },
+  {
     q: 'Was passiert, wenn bei der Bohrung gar kein heißes Wasser gefunden wird?',
     a: 'Das geologische Bohrrisiko tragen ausschließlich wir als Versorger (abgesichert über eine staatliche Fündigkeitsversicherung). Sollte das Projekt wider Erwarten nicht realisiert werden, erlischt Ihr Vorvertrag automatisch und völlig kostenfrei für Sie.',
+  },
+  {
+    q: 'Bin ich bei Fernwärme nicht einem Monopol ausgeliefert, das später die Preise diktiert?',
+    a: 'Nein – aus zwei Gründen: Erstens ist unsere Preisformel zu 100 % vom Gas- und CO₂-Preis entkoppelt (sie richtet sich nur nach lokalem Pumpenstrom und allgemeiner Inflation). Zweitens können Sie über unsere BürgerWärme Genossenschaft selbst Miteigentümer werden und über die jährliche Dividende mitverdienen.',
+    portal: true,
+  },
+  {
+    q: 'Was passiert, wenn sich das Projekt um mehrere Jahre verzögert?',
+    a: 'Für Ihre Sicherheit enthält der Vorvertrag eine garantierte Exit-Klausel: Verzögert sich Ihr Anschluss um mehr als 12 Monate über den zugesagten Termin hinaus, dürfen Sie jederzeit kostenfrei zurücktreten – und erhalten sogar einen Wechselbonus für eine alternative Heizung.',
   },
 ];
 
@@ -37,7 +51,7 @@ async function api(path, body) {
 }
 
 // chat: [{ role, content, typing?, local?, ticket? }] is kept by the parent so it survives tab switches.
-export default function FragenPage({ street, houseNo, outsideNetwork, connection, inputs, houseLabel, chat, setChat, onCheckAddress, onReportProblem }) {
+export default function FragenPage({ street, houseNo, outsideNetwork, connection, inputs, houseLabel, chat, setChat, onCheckAddress, onReportProblem, onOpenPortal }) {
   const [text, setText] = useState('');
   const [aiActive, setAiActive] = useState(null); // null = unknown / server not reachable
   const [busy, setBusy] = useState(false);
@@ -52,9 +66,9 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
   }, [chat]);
 
   // Prepared question: question and answer appear at once, the answer pops in.
-  const ask = ({ q, a, ticket }) => {
+  const ask = ({ q, a, ticket, portal }) => {
     if (busy) return;
-    setChat((c) => [...c, { role: 'user', content: q, local: true }, { role: 'assistant', content: a, local: true, ticket, pop: true }]);
+    setChat((c) => [...c, { role: 'user', content: q, local: true }, { role: 'assistant', content: a, local: true, ticket, portal, pop: true }]);
   };
 
   const send = async (raw) => {
@@ -125,6 +139,9 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
                 {m.content}
                 {m.ticket && (
                   <button type="button" className="ep-btn primary" onClick={onReportProblem}>Störung jetzt melden</button>
+                )}
+                {m.portal && onOpenPortal && (
+                  <button type="button" className="ep-btn primary" onClick={onOpenPortal}>Zum Mitgliederportal →</button>
                 )}
               </div>
             ))}

@@ -604,6 +604,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
             setChat={setChat}
             onCheckAddress={() => setPage('pruefen')}
             onReportProblem={() => { setPortalTab('stoerung'); setPage('mitglieder'); }}
+            onOpenPortal={() => { setPortalTab('fortschritt'); setPage('mitglieder'); }}
           />
         )}
 
