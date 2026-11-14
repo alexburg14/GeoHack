@@ -3,6 +3,7 @@
 Run:  python3 server.py            (http://127.0.0.1:8000)
 Env:  .env with ANTHROPIC_API_KEY=... enables the LLM advisor (else offline answers).
 """
+import gzip
 import json
 import os
 import random
@@ -23,6 +24,19 @@ CONTENT_TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; c
                  ".png": "image/png", ".ico": "image/x-icon"}
 
 
+GZIP_TYPES = {".html", ".js", ".css", ".json", ".svg"}
+_gzip_cache = {}  # (path, mtime) -> compressed bytes, so each file is compressed once
+_gzip_lock = threading.Lock()
+
+
+def gzipped(path, data):
+    key = (str(path), path.stat().st_mtime_ns)
+    with _gzip_lock:
+        if key not in _gzip_cache:
+            _gzip_cache[key] = gzip.compress(data, compresslevel=6, mtime=0)
+        return _gzip_cache[key]
+
+
 def load_env(path=ROOT / ".env"):
     env = {}
     if path.exists():
@@ -37,6 +51,7 @@ def load_env(path=ROOT / ".env"):
 ENV = load_env()
 API_KEY = ENV.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
 MODEL = ENV.get("ANTHROPIC_MODEL", advisor.DEFAULT_MODEL)
+HOME_PAGE = os.environ.get("HOME_PAGE", "") if os.environ.get("HOME_PAGE", "").startswith("/") else ""
 BASE_URL = ENV.get("ANTHROPIC_BASE_URL")  # only from .env, so a shell-level proxy setting is not picked up by accident
 
 ASSUMPTIONS = cm.load_assumptions()
@@ -281,6 +296,13 @@ class Handler(BaseHTTPRequestHandler):
         }
 
     def serve_static(self, path):
+        # HOME_PAGE=/presentation/ makes the bare address open the EnergiePlus site instead of the Wärme-Pakt app
+        if path in ("", "/") and HOME_PAGE:
+            self.send_response(HTTPStatus.FOUND)
+            self.send_header("Location", HOME_PAGE)
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            return
         rel = {"": "index.html", "/": "index.html", "/suche": "suche.html"}.get(path) or path.lstrip("/").removeprefix("static/")
         target = (STATIC / rel).resolve()
         if not target.is_relative_to(STATIC):
@@ -295,10 +317,20 @@ class Handler(BaseHTTPRequestHandler):
         if not target.is_file():
             return self.send_json({"fehler": "Nicht gefunden."}, HTTPStatus.NOT_FOUND)
         data = target.read_bytes()
+        # Compress text files when the client accepts it: much less to upload through a home connection
+        compressed = target.suffix in GZIP_TYPES and "gzip" in (self.headers.get("Accept-Encoding") or "")
+        if compressed:
+            data = gzipped(target, data)
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", CONTENT_TYPES.get(target.suffix, "application/octet-stream"))
+        if compressed:
+            self.send_header("Content-Encoding", "gzip")
+        self.send_header("Vary", "Accept-Encoding")
         self.send_header("Content-Length", str(len(data)))
-        self.send_header("Cache-Control", "no-cache")
+        # Vite's build files carry a content hash in their name and never change: let browsers and the
+        # Cloudflare edge cache them for good, so the Mac only serves HTML and the API. Everything else is revalidated.
+        immutable = target.is_relative_to(STATIC / "presentation" / "assets")
+        self.send_header("Cache-Control", "public, max-age=31536000, immutable" if immutable else "no-cache")
         self.end_headers()
         self.wfile.write(data)
 
