@@ -14,13 +14,6 @@ import './landing.css';
 // How long to wait after the last keystroke before a complete address forwards to step 2.
 const AUTO_FORWARD_MS = 1200;
 
-const BUILDING_OPTIONS = [
-  { id: 'efh', label: 'Einfamilienhaus', emoji: '🏠', desc: 'Freistehend oder Doppelhaushälfte' },
-  { id: 'rh', label: 'Reihenhaus', emoji: '🏘️', desc: 'Mittel- oder Endhaus' },
-  { id: 'zfh', label: 'Zweifamilienhaus', emoji: '🏡', desc: 'Zwei getrennte Wohneinheiten' },
-  { id: 'mfh', label: 'Mehrfamilienhaus', emoji: '🏢', desc: 'Ab 3 Wohneinheiten' },
-];
-
 // Alex's cost model covers gas and oil boilers.
 const HEATING_OPTIONS = [
   { id: 'gas', label: 'Gasheizung', emoji: '🔥', fuel: 'Gas' },
@@ -29,9 +22,13 @@ const HEATING_OPTIONS = [
 
 const RENOVATION_OPTIONS = [
   { id: 'unsaniert', label: 'Unsaniert' },
-  { id: 'teilsaniert', label: 'Teilsaniert' },
+  { id: 'teilsaniert', label: 'Teilsaniert (z. B. neue Fenster)' },
   { id: 'vollsaniert', label: 'Vollsaniert' },
 ];
+
+// Demo household, same values as "Beispiel: Familie Huber" in the Wärme-Pakt app (static/app.js)
+const HUBER = { baujahr: '1985', heizung: 'gas', heizungsalter: '17', wohnflaeche: '140', personen: '4', sanierung: 'teilsaniert' };
+const DEMO_ADDRESS = { street: 'Ottostraße', houseNo: '12', zip: '82319' };
 
 const OPTION_META = {
   fernwaerme: { label: 'Geothermie-Fernwärme', color: '#bf4416', width: 4 },
@@ -86,19 +83,28 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
     if (mainRef.current) mainRef.current.scrollTop = 0;
   }, [page]);
 
-  const [street, setStreet] = useState('');
-  const [houseNo, setHouseNo] = useState('');
-  const [zipCode, setZipCode] = useState('');
+  // Prefilled with the demo address, so the demo runs with one click per step
+  const [street, setStreet] = useState(DEMO_ADDRESS.street);
+  const [houseNo, setHouseNo] = useState(DEMO_ADDRESS.houseNo);
+  const [zipCode, setZipCode] = useState(DEMO_ADDRESS.zip);
   const [addressDone, setAddressDone] = useState(false);
   const [forwarding, setForwarding] = useState(false);
 
-  const [buildingType, setBuildingType] = useState('efh');
-  const [buildYear, setBuildYear] = useState('1985');
-  const [renovation, setRenovation] = useState('unsaniert');
-  const [livingArea, setLivingArea] = useState('140');
-  const [persons, setPersons] = useState('4');
-  const [currentHeating, setCurrentHeating] = useState('gas');
-  const [heatingAge, setHeatingAge] = useState('17');
+  const [buildYear, setBuildYear] = useState(HUBER.baujahr);
+  const [renovation, setRenovation] = useState(HUBER.sanierung);
+  const [livingArea, setLivingArea] = useState(HUBER.wohnflaeche);
+  const [persons, setPersons] = useState(HUBER.personen);
+  const [currentHeating, setCurrentHeating] = useState(HUBER.heizung);
+  const [heatingAge, setHeatingAge] = useState(HUBER.heizungsalter);
+  const fillHuber = () => {
+    setBuildYear(HUBER.baujahr);
+    setRenovation(HUBER.sanierung);
+    setLivingArea(HUBER.wohnflaeche);
+    setPersons(HUBER.personen);
+    setCurrentHeating(HUBER.heizung);
+    setHeatingAge(HUBER.heizungsalter);
+  };
+  const [askHint, setAskHint] = useState(true); // "Noch Fragen?" bubble on the result page
   const [hasResult, setHasResult] = useState(false);
   // "What if" price factors from the result page (empty = assumptions.json).
   const [factors, setFactors] = useState({});
@@ -147,7 +153,6 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
     setPage('pruefen');
   };
 
-  const selectedBuilding = BUILDING_OPTIONS.find((b) => b.id === buildingType);
   const selectedHeating = HEATING_OPTIONS.find((h) => h.id === currentHeating);
   const addressLabel = `${street.trim()} ${houseNo.trim()}, ${zipCode.trim()}`;
 
@@ -368,76 +373,52 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
 
             <StreetStatus compact />
 
-            <div className="ep-card" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <div>
-                <p className="ep-section-label">Gebäudetyp</p>
-                <div className="ep-grid2">
-                  {BUILDING_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      className={`ep-option ${buildingType === opt.id ? 'selected' : ''}`}
-                      onClick={() => setBuildingType(opt.id)}
-                    >
-                      <span className="emoji">{opt.emoji}</span>
-                      <span>
-                        <span className="t">{opt.label}</span>
-                        <span className="d" style={{ display: 'block' }}>{opt.desc}</span>
-                      </span>
-                    </button>
-                  ))}
-                </div>
+            {/* Same fields as the house form in the Wärme-Pakt app (static/index.html, Schritt 2) */}
+            <form
+              className="ep-card ep-house-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                showResult();
+              }}
+            >
+              <label className="field">
+                Baujahr
+                <input className="text" type="number" min="1800" max="2026" required value={buildYear}
+                  onChange={(e) => setBuildYear(e.target.value)} onKeyDown={stopKeys} />
+              </label>
+              <label className="field">
+                Heizungsart
+                <select className="ep-select" required value={currentHeating} onChange={(e) => setCurrentHeating(e.target.value)} onKeyDown={stopKeys}>
+                  {HEATING_OPTIONS.map((h) => <option key={h.id} value={h.id}>{h.fuel}</option>)}
+                </select>
+              </label>
+              <label className="field">
+                Alter der Heizung (Jahre)
+                <input className="text" type="number" min="0" max="60" required value={heatingAge}
+                  onChange={(e) => setHeatingAge(e.target.value)} onKeyDown={stopKeys} />
+              </label>
+              <label className="field">
+                Wohnfläche (m²)
+                <input className="text" type="number" min="20" max="1000" required value={livingArea}
+                  onChange={(e) => setLivingArea(e.target.value)} onKeyDown={stopKeys} />
+              </label>
+              <label className="field">
+                Personen im Haushalt
+                <input className="text" type="number" min="1" max="15" required value={persons}
+                  onChange={(e) => setPersons(e.target.value)} onKeyDown={stopKeys} />
+              </label>
+              <label className="field">
+                Sanierungsgrad
+                <select className="ep-select" required value={renovation} onChange={(e) => setRenovation(e.target.value)} onKeyDown={stopKeys}>
+                  {RENOVATION_OPTIONS.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
+                </select>
+              </label>
+              <div className="ep-house-actions">
+                <button type="submit" className="ep-btn primary">Vergleich berechnen →</button>
+                <button type="button" className="ep-btn ghost" onClick={fillHuber}>Beispiel: Familie Huber</button>
+                <button type="button" className="ep-btn ghost" onClick={() => setPage('pruefen')}>← Adresse ändern</button>
               </div>
-
-              <div className="ep-grid2" style={{ gap: 18 }}>
-                <NumberField label="Baujahr" value={buildYear} onChange={setBuildYear} presets={['1965', '1985', '2000', '2015']} />
-                <div>
-                  <p className="ep-section-label">Sanierungsstand</p>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {RENOVATION_OPTIONS.map((r) => (
-                      <button
-                        key={r.id}
-                        type="button"
-                        className={`ep-chip ${renovation === r.id ? 'selected' : ''}`}
-                        onClick={() => setRenovation(r.id)}
-                      >
-                        {r.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <NumberField label="Beheizte Wohnfläche" unit="m²" value={livingArea} onChange={setLivingArea} presets={['110', '140', '200']} />
-                <NumberField label="Personen im Haushalt" value={persons} onChange={setPersons} presets={['1', '2', '4']} />
-              </div>
-
-              <div>
-                <p className="ep-section-label">Aktuelle Heizung</p>
-                <div className="ep-grid2">
-                  {HEATING_OPTIONS.map((h) => (
-                    <button
-                      key={h.id}
-                      type="button"
-                      className={`ep-option ${currentHeating === h.id ? 'selected' : ''}`}
-                      onClick={() => setCurrentHeating(h.id)}
-                    >
-                      <span className="emoji" style={{ fontSize: 22 }}>{h.emoji}</span>
-                      <span className="t">{h.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <NumberField label="Alter der Heizung" unit="Jahre" value={heatingAge} onChange={setHeatingAge} presets={['5', '10', '17', '25']} />
-
-              <div className="ep-actions">
-                <button type="button" className="ep-btn ghost" onClick={() => setPage('pruefen')}>
-                  ← Adresse ändern
-                </button>
-                <button type="button" className="ep-btn primary" onClick={showResult}>
-                  Vergleich berechnen →
-                </button>
-              </div>
-            </div>
+            </form>
           </div>
         )}
 
@@ -449,7 +430,6 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
               <h1>Ihre Heizkosten über 20 Jahre</h1>
               <div className="ep-summary" style={{ marginTop: 12 }}>
                 <span>📍 {addressLabel}</span>
-                <span>{selectedBuilding?.label}</span>
                 <span>Baujahr {inputs.baujahr}</span>
                 <span>{inputs.wohnflaeche} m²</span>
                 <span>{inputs.personen} Personen</span>
@@ -471,8 +451,14 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                     <div className="total">{eur(o.gesamt_eur)}</div>
                     <small className="muted">Gesamtkosten in 20 Jahren</small>
                     <dl>
-                      <dt>Investition</dt>
-                      <dd>{eur(o.investition_eur)}</dd>
+                      <dt>Investition {k === 'fernwaerme' ? 'beim Anschluss' : 'heute'}</dt>
+                      <dd>{eur(o.anschaffung_eur)}</dd>
+                      {o.investition_eur > o.anschaffung_eur && (
+                        <>
+                          <dt>{k === 'bestand' ? 'Neuer Kessel' : 'Ersatzgerät'} (anteilig)</dt>
+                          <dd>{eur(o.investition_eur - o.anschaffung_eur)}</dd>
+                        </>
+                      )}
                       <dt>Laufend Ø pro Jahr</dt>
                       <dd>{eur(running)}</dd>
                       <dt>CO₂ in 20 Jahren</dt>
@@ -487,12 +473,6 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                           </dd>
                         </>
                       )}
-                      {k === 'bestand' && o.investition_eur > 0 && (
-                        <>
-                          <dt>Kesseltausch</dt>
-                          <dd>enthalten</dd>
-                        </>
-                      )}
                     </dl>
                     <div className="badges">
                       {k === cheapest && <span className="ep-tag">Niedrigste Kosten</span>}
@@ -502,6 +482,22 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                 );
               })}
             </div>
+
+            {(() => {
+              // Say it plainly when geothermal wins on both: lower upfront and lower over the whole period
+              const fw = result.optionen.fernwaerme;
+              const hp = result.optionen.waermepumpe;
+              if (fw.anschaffung_eur >= hp.anschaffung_eur || fw.gesamt_eur >= hp.gesamt_eur) return null;
+              return (
+                <div className="ep-verdict">
+                  <span aria-hidden="true">✓</span>
+                  <p>
+                    <b>Die Geothermie gewinnt zweimal:</b> {eur(hp.anschaffung_eur - fw.anschaffung_eur)} weniger Investition als die
+                    Wärmepumpe und über {YEARS} Jahre {eur(hp.gesamt_eur - fw.gesamt_eur)} weniger Gesamtkosten.
+                  </p>
+                </div>
+              );
+            })()}
 
             <FactorPanel
               factors={factors}
@@ -599,7 +595,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
             outsideNetwork={addressDone && !matchedStreet}
             connection={matchedStreet ? `${matchedStreet.expectedConnection} (${PHASES[matchedStreet.phase].label})` : ''}
             inputs={hasResult ? inputs : null}
-            houseLabel={`${selectedBuilding.label}, Baujahr ${inputs.baujahr}, ${inputs.wohnflaeche} m², ${selectedHeating.label} (${inputs.heizungsalter} Jahre)`}
+            houseLabel={`Baujahr ${inputs.baujahr}, ${inputs.wohnflaeche} m², ${RENOVATION_OPTIONS.find((r) => r.id === renovation).label.replace(/ \(.*\)/, '').toLowerCase()}, ${selectedHeating.label} (${inputs.heizungsalter} Jahre)`}
             chat={chat}
             setChat={setChat}
             onCheckAddress={() => setPage('pruefen')}
@@ -639,32 +635,22 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
           </div>
         )}
       </div>
+
+      {/* Mini chat on the result page: invites to the advisor */}
+      {page === 'ergebnis' && askHint && (
+        <div className="ep-askhint" role="complementary" aria-label="Berater">
+          <button type="button" className="ep-askhint-close" aria-label="Schließen" onClick={() => setAskHint(false)}>×</button>
+          <button type="button" className="ep-askhint-body" onClick={() => setPage('fragen')}>
+            <span className="ep-askhint-avatar" aria-hidden="true">W</span>
+            <span>
+              <b>Noch Fragen?</b>
+              <small>Der Wärme-Pakt-Berater antwortet sofort, z. B. zur Wartezeit oder zur Förderung.</small>
+              <span className="ep-askhint-cta">Zu „Fragen?“ →</span>
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
-function NumberField({ label, unit, value, onChange, presets }) {
-  return (
-    <div>
-      <p className="ep-section-label">
-        {label}
-        {unit ? ` (${unit})` : ''}
-      </p>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-        <input
-          className="text"
-          type="number"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={stopKeys}
-          style={{ width: 100, marginTop: 0 }}
-        />
-        {presets.map((p) => (
-          <button key={p} type="button" className={`ep-chip ${value === p ? 'selected' : ''}`} onClick={() => onChange(p)}>
-            {p}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}

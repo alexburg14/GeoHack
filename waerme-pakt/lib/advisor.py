@@ -52,7 +52,8 @@ def build_context(check, inputs, comparison, stake, assumptions):
             "optionen": {
                 labels[key]: {
                     "gesamtkosten_eur": opt["gesamt_eur"],
-                    "investition_eur": opt["investition_eur"],
+                    "anschaffung_eur": opt["anschaffung_eur"],
+                    "investition_inkl_ersatz_eur": opt["investition_eur"],
                     "co2_tonnen_20_jahre": opt["co2_t"],
                 }
                 for key, opt in comparison["optionen"].items()

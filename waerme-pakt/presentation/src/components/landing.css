@@ -380,3 +380,29 @@
 @keyframes arDraw { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }
 .ar-reticle { animation: arPulse 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes arPulse { 50% { opacity: 0.5; } }
+
+/* House form (fields as in the Wärme-Pakt app) */
+.ep-house-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 16px; }
+.ep .ep-select { width: 100%; margin-top: 6px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; font: inherit;
+  color: var(--ink); }
+.ep .ep-select:focus { outline: 2px solid var(--hot); outline-offset: 1px; border-color: var(--hot); }
+.ep-house-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+
+/* "Noch Fragen?" mini chat on the result page */
+.ep { position: relative; }
+.ep-askhint { position: absolute; right: 22px; bottom: 22px; z-index: 50; width: 300px; animation: epAsk 0.45s 0.8s cubic-bezier(0.2, 1.3, 0.4, 1) both; }
+@keyframes epAsk { from { opacity: 0; transform: translateY(16px) scale(0.92); } to { opacity: 1; transform: none; } }
+.ep-askhint-body { width: 100%; display: flex; gap: 12px; align-items: flex-start; text-align: left; border: 1px solid var(--line); border-radius: 18px 18px 4px 18px;
+  background: var(--card); padding: 14px 16px; cursor: pointer; box-shadow: 0 12px 32px rgba(34, 28, 24, 0.22); color: var(--ink); }
+.ep-askhint-body:hover { border-color: var(--hot); }
+.ep-askhint-body b { display: block; font: 800 16px Montserrat, Arial, sans-serif; }
+.ep-askhint-body small { display: block; color: var(--soft); font-size: 13px; line-height: 1.4; margin-top: 2px; }
+.ep-askhint-cta { display: inline-block; margin-top: 8px; color: var(--accent); font-weight: 700; font-size: 13.5px; }
+.ep-askhint-avatar { flex-shrink: 0; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--accent);
+  color: var(--paper); font: 800 15px Montserrat, Arial, sans-serif; }
+.ep-askhint-close { position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line);
+  background: var(--card); cursor: pointer; font-size: 15px; line-height: 1; color: var(--soft); box-shadow: var(--shadow); }
+@media (prefers-reduced-motion: reduce) { .ep-askhint { animation: none; } }
+.ep-verdict { display: flex; gap: 12px; align-items: center; background: #d8ede5; color: var(--ok); border-radius: 14px; padding: 14px 18px; font-size: 15px; }
+.ep-verdict > span { display: grid; place-items: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--ok); color: #fff; font-weight: 800; }
+.ep .ep-verdict p { line-height: 1.45; }

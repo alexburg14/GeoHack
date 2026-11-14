@@ -56,18 +56,30 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
   const [aiActive, setAiActive] = useState(null); // null = unknown / server not reachable
   const [busy, setBusy] = useState(false);
   const logRef = useRef(null);
+  const showFrom = useRef(null); // index of the message that should be at the top of the log after the next render
 
   useEffect(() => {
     api('/api/config').then((c) => setAiActive(c.ki_aktiv), () => setAiActive(null));
   }, []);
 
   useEffect(() => {
-    if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
+    const log = logRef.current;
+    if (!log) return;
+    const el = showFrom.current !== null && log.querySelector(`[data-idx="${showFrom.current}"]`);
+    if (el) {
+      // prepared question: put the question at the top so the whole answer is readable
+      log.scrollTo({ top: log.scrollTop + el.getBoundingClientRect().top - log.getBoundingClientRect().top - 8, behavior: 'smooth' });
+      log.closest('.fr-chat')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } else {
+      log.scrollTop = log.scrollHeight;
+    }
+    showFrom.current = null;
   }, [chat]);
 
   // Prepared question: question and answer appear at once, the answer pops in.
   const ask = ({ q, a, ticket, portal }) => {
     if (busy) return;
+    showFrom.current = chat.length;
     setChat((c) => [...c, { role: 'user', content: q, local: true }, { role: 'assistant', content: a, local: true, ticket, portal, pop: true }]);
   };
 
@@ -135,7 +147,7 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
               </div>
             )}
             {chat.map((m, i) => (
-              <div key={i} className={`fr-msg ${m.role} ${m.typing ? 'typing' : ''} ${m.pop ? 'pop' : ''}`}>
+              <div key={i} data-idx={i} className={`fr-msg ${m.role} ${m.typing ? 'typing' : ''} ${m.pop ? 'pop' : ''}`}>
                 {m.content}
                 {m.ticket && (
                   <button type="button" className="ep-btn primary" onClick={onReportProblem}>Störung jetzt melden</button>
@@ -146,6 +158,7 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
               </div>
             ))}
           </div>
+          <p className="fr-chips-label">Häufige Fragen · antippen für die Antwort</p>
           <div className="fr-chips">
             {QUESTIONS.map((item) => (
               <button key={item.q} type="button" onClick={() => ask(item)} disabled={busy}>{item.q}</button>

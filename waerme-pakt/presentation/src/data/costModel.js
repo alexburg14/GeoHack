@@ -54,10 +54,17 @@ function fossilYear(inputs, demand, i) {
   return [cost, fuelKwh * factor];
 }
 
-function summary(yearly, invest, co2Kg) {
+// invest: all investments inside the horizon; upfront: what the option costs when it starts.
+function summary(yearly, invest, co2Kg, upfront) {
   let total = 0;
   const cumulative = yearly.map((c) => Math.round((total += c)));
-  return { gesamt_eur: Math.round(total), investition_eur: Math.round(invest), kumuliert_eur: cumulative, co2_t: Math.round(co2Kg / 100) / 10 };
+  return {
+    gesamt_eur: Math.round(total),
+    investition_eur: Math.round(invest),
+    anschaffung_eur: Math.round(upfront),
+    kumuliert_eur: cumulative,
+    co2_t: Math.round(co2Kg / 100) / 10,
+  };
 }
 
 function scenarioKeep(inputs, demand, years) {
@@ -76,7 +83,7 @@ function scenarioKeep(inputs, demand, years) {
     yearly.push(cost);
     co2Kg += co2;
   }
-  return summary(yearly, invest, co2Kg);
+  return summary(yearly, invest, co2Kg, 0);
 }
 
 function scenarioHeatPump(inputs, demand, years) {
@@ -97,7 +104,7 @@ function scenarioHeatPump(inputs, demand, years) {
     replacements += replacement;
     co2Kg += powerKwh * v('co2', 'faktor_strom') * (1 - v('co2', 'strom_rueckgang')) ** i;
   }
-  return summary(yearly, invest + replacements, co2Kg);
+  return summary(yearly, invest + replacements, co2Kg, invest);
 }
 
 // Keep the old boiler until the connection year, then geothermal district heating.
@@ -122,7 +129,7 @@ function scenarioDistrict(inputs, demand, connYear, years) {
       co2Kg += demand * v('co2', 'faktor_geothermie');
     }
   }
-  return { ...summary(yearly, invest + renewals, co2Kg), jahre_bis_anschluss: k };
+  return { ...summary(yearly, invest + renewals, co2Kg, invest), jahre_bis_anschluss: k };
 }
 
 // Seasonal performance of the heat pump: from the building year unless the user moved the slider.

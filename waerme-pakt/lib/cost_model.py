@@ -115,7 +115,7 @@ def scenario_keep(inputs, a, demand):
             invest += share
         yearly.append(cost)
         co2_kg += co2
-    return _summary(yearly, invest, co2_kg)
+    return _summary(yearly, invest, co2_kg, upfront=0.0)
 
 
 def scenario_heat_pump(inputs, a, demand):
@@ -136,7 +136,7 @@ def scenario_heat_pump(inputs, a, demand):
         invest += replacement
         yearly.append(cost + (first_invest if i == 0 else 0) + replacement)
         co2_kg += power_kwh * v(a, "co2", "faktor_strom") * (1 - v(a, "co2", "strom_rueckgang")) ** i
-    return _summary(yearly, invest, co2_kg)
+    return _summary(yearly, invest, co2_kg, upfront=first_invest)
 
 
 def scenario_district(inputs, a, demand, conn_year, stake_eur=0):
@@ -160,12 +160,13 @@ def scenario_district(inputs, a, demand, conn_year, stake_eur=0):
             co2 = demand * v(a, "co2", "faktor_geothermie")
         yearly.append(cost)
         co2_kg += co2
-    summary = _summary(yearly, invest, co2_kg)
+    summary = _summary(yearly, invest, co2_kg, upfront=invest)
     summary["jahre_bis_anschluss"] = k
     return summary
 
 
-def _summary(yearly, invest, co2_kg):
+def _summary(yearly, invest, co2_kg, upfront):
+    """invest: all investments inside the horizon; upfront: what the option costs when it starts."""
     cumulative, total = [], 0.0
     for cost in yearly:
         total += cost
@@ -173,6 +174,7 @@ def _summary(yearly, invest, co2_kg):
     return {
         "gesamt_eur": round(total),
         "investition_eur": round(invest),
+        "anschaffung_eur": round(upfront),
         "kumuliert_eur": cumulative,
         "co2_t": round(co2_kg / 1000, 1),
     }
