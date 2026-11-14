@@ -267,22 +267,28 @@
 .ep-gnav b { display: block; font-size: 15px; }
 .ep-gnav small { display: block; font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
 .ep-gnav .timer { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--accent); animation: epFill var(--ep-delay) linear forwards; }
-.ep-gslide { background: var(--ink); color: var(--paper); border-radius: 22px; padding: 36px 38px 30px; min-height: 380px; display: flex;
-  flex-direction: column; animation: epSlide 0.45s ease-out; position: relative; overflow: hidden; }
+/* Carousel: native horizontal scroll with snap; scrollbar hidden */
+.ep-gcarousel { position: relative; min-width: 0; }
+.ep-gtrack { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+  border-radius: 22px; }
+.ep-gtrack::-webkit-scrollbar { display: none; }
+.ep-gslide { flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; background: var(--ink); color: var(--paper); border-radius: 22px;
+  padding: 36px 38px 92px; min-height: 380px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
 .ep-gslide::after { content: ''; position: absolute; right: -90px; bottom: -110px; width: 320px; height: 260px; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(232, 118, 58, 0.45), transparent); pointer-events: none; }
-@keyframes epSlide { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
 .ep-gslide-top { display: flex; justify-content: space-between; align-items: flex-start; }
 .ep-gslide .big-n { font: 800 72px/1 Montserrat, Arial, sans-serif; color: var(--hot); }
 .ep-gslide .icon { font-size: 44px; }
 .ep-gslide h3 { color: var(--paper); font-size: 32px; font-weight: 800; margin: 14px 0 12px; }
 .ep-gslide .claim { font-size: 21px; line-height: 1.4; color: var(--paper); max-width: 520px; }
 .ep-gslide .detail { font-size: 15px; line-height: 1.55; color: #d9cfc4; margin-top: 14px; max-width: 520px; }
-.ep-gslide-foot { margin-top: auto; padding-top: 24px; display: flex; justify-content: flex-end; align-items: center; position: relative; z-index: 1; }
-.ep-gslide .arrows { display: flex; gap: 8px; }
-.ep-gslide .arrows button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(246, 241, 234, 0.3); background: transparent;
-  color: var(--paper); font-size: 16px; cursor: pointer; }
-.ep-gslide .arrows button:hover { background: rgba(246, 241, 234, 0.1); }
+/* Controls: on desktop over the bottom right of the card; on phones below the track (mobile.css) */
+.ep-gcontrols { position: absolute; right: 30px; bottom: 26px; z-index: 2; display: flex; align-items: center; gap: 8px; }
+.ep-gcontrols .arrows { display: flex; gap: 8px; }
+.ep-gcontrols .arrows button, .ep-gplay { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(246, 241, 234, 0.3);
+  background: transparent; color: var(--paper); font-size: 16px; cursor: pointer; display: grid; place-items: center; }
+.ep-gcontrols .arrows button:hover, .ep-gplay:hover { background: rgba(246, 241, 234, 0.1); }
+.ep-gplay svg { width: 16px; height: 16px; }
 .ep-gnote { grid-column: 1 / -1; font-size: 12px; color: var(--keep); margin: 0; }
 
 /* Neighbourhood areas on the map */
@@ -411,7 +417,12 @@
 .ep-menu-btn { display: none; align-items: center; gap: 8px; border: 1px solid rgba(246, 241, 234, 0.3); background: transparent; color: var(--paper);
   border-radius: 999px; padding: 8px 14px; font: 600 15px Inter, Arial, sans-serif; cursor: pointer; }
 .ep-menu-btn span { font-size: 17px; line-height: 1; }
-/* Slide position dots: only on phones, where the list of reasons is hidden (mobile.css) */
-.ep-gdots { display: none; gap: 6px; align-items: center; margin-right: auto; }
-.ep-gdots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(246, 241, 234, 0.3); transition: width 0.3s, background 0.3s; }
-.ep-gdots i.on { width: 22px; border-radius: 4px; background: var(--hot); }
+/* Progress dots (as on apple.com): the active one stretches and fills while the slide is shown.
+   Only on phones, where the list of reasons is hidden (mobile.css). */
+.ep-gdots { display: none; gap: 8px; align-items: center; height: 40px; padding: 0 16px; border-radius: 999px; background: var(--paper2); }
+.ep-gdots button { position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 4px; background: #b9ab9c; cursor: pointer;
+  overflow: hidden; transition: width 0.35s ease; }
+.ep-gdots button.on { width: 32px; background: #cfc3b5; }
+.ep-gdots button span { position: absolute; inset: 0; background: var(--ink); transform-origin: left; }
+.ep-gdots button span.run { animation: epDot var(--ep-delay) linear both; }
+@keyframes epDot { from { transform: scaleX(0); } to { transform: scaleX(1); } }

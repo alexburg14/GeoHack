@@ -8,7 +8,7 @@ import GenossenschaftPage from './GenossenschaftPage';
 import MitgliederPage from './MitgliederPage';
 import FragenPage from './FragenPage';
 import { STREETS, PHASES, findStreet, areaOfStreet } from '../data/town';
-import { compare, connectionYear, START_YEAR, YEARS, ASSUMPTIONS_NOTE } from '../data/costModel';
+import { compare, connectionYear, START_YEAR, ASSUMPTIONS_NOTE } from '../data/costModel';
 import './landing.css';
 
 // How long to wait after the last keystroke before a complete address forwards to step 2.
@@ -158,9 +158,12 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
     sanierung: renovation,
   };
   const conn = expectedConnection(matchedStreet);
-  const result = compare(inputs, conn.year, { factors });
-  const baseline = compare(inputs, conn.year);
-  const longRun = compare(inputs, conn.year, { years: 40, factors });
+  // The result page compares 40 years: about the lifetime of the house connection, and the heat pump is
+  // replaced twice in that time. The scroll story below still starts at the usual 20 years.
+  const RESULT_YEARS = 40;
+  const result = compare(inputs, conn.year, { years: RESULT_YEARS, factors });
+  const baseline = compare(inputs, conn.year, { years: RESULT_YEARS });
+  const longRun = result;
   const optionKeys = ['fernwaerme', 'waermepumpe', 'bestand'];
   const cheapest = optionKeys.reduce((x, y) => (result.optionen[x].gesamt_eur <= result.optionen[y].gesamt_eur ? x : y));
   const cleanest = optionKeys.reduce((x, y) => (result.optionen[x].co2_t <= result.optionen[y].co2_t ? x : y));
@@ -430,7 +433,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
           <div className="ep-page" key="ergebnis" style={{ maxWidth: 1080 }}>
             <div>
               <p className="eyebrow">Ihr Ergebnis</p>
-              <h1>Ihre Heizkosten über 20 Jahre</h1>
+              <h1>Ihre Heizkosten über {RESULT_YEARS} Jahre</h1>
               <div className="ep-summary" style={{ marginTop: 12 }}>
                 <span>📍 {addressLabel}</span>
                 <span>Baujahr {inputs.baujahr}</span>
@@ -440,19 +443,19 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
               </div>
               <p className="muted" style={{ fontSize: 13, marginTop: 10 }}>
                 Geschätzter Wärmebedarf: {result.waermebedarf_kwh.toLocaleString('de-DE')} kWh pro Jahr · Zeitraum{' '}
-                {START_YEAR}–{START_YEAR + YEARS - 1}
+                {START_YEAR}–{START_YEAR + RESULT_YEARS - 1}
               </p>
             </div>
 
             <div className="ep-options">
               {optionKeys.map((k) => {
                 const o = result.optionen[k];
-                const running = (o.gesamt_eur - o.investition_eur) / YEARS;
+                const running = (o.gesamt_eur - o.investition_eur) / RESULT_YEARS;
                 return (
                   <div key={k} className={`ep-card ep-opt ${k}`}>
                     <h3>{optionLabel(k)}</h3>
                     <div className="total">{eur(o.gesamt_eur)}</div>
-                    <small className="muted">Gesamtkosten in 20 Jahren</small>
+                    <small className="muted">Gesamtkosten in {RESULT_YEARS} Jahren</small>
                     <dl>
                       <dt>Investition {k === 'fernwaerme' ? 'beim Anschluss' : 'heute'}</dt>
                       <dd>{eur(o.anschaffung_eur)}</dd>
@@ -464,7 +467,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                       )}
                       <dt>Laufend Ø pro Jahr</dt>
                       <dd>{eur(running)}</dd>
-                      <dt>CO₂ in 20 Jahren</dt>
+                      <dt>CO₂ in {RESULT_YEARS} Jahren</dt>
                       <dd>{o.co2_t.toLocaleString('de-DE', { minimumFractionDigits: 1 })} t</dd>
                       {k === 'fernwaerme' && (
                         <>
@@ -496,7 +499,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
                   <span aria-hidden="true">✓</span>
                   <p>
                     <b>Die Geothermie gewinnt zweimal:</b> {eur(hp.anschaffung_eur - fw.anschaffung_eur)} weniger Investition als die
-                    Wärmepumpe und über {YEARS} Jahre {eur(hp.gesamt_eur - fw.gesamt_eur)} weniger Gesamtkosten.
+                    Wärmepumpe und über {RESULT_YEARS} Jahre {eur(hp.gesamt_eur - fw.gesamt_eur)} weniger Gesamtkosten.
                   </p>
                 </div>
               );
@@ -511,6 +514,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
               keys={optionKeys}
               meta={OPTION_META}
               label={optionLabel}
+              years={RESULT_YEARS}
             />
 
             <LongRunStory
@@ -647,7 +651,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
             <span className="ep-askhint-avatar" aria-hidden="true">W</span>
             <span>
               <b>Noch Fragen?</b>
-              <small>Der Wärme-Pakt-Berater antwortet sofort, z. B. zur Wartezeit oder zur Förderung.</small>
+              <small>Der EnergiePlus-Berater antwortet sofort, z. B. zur Wartezeit oder zur Förderung.</small>
               <span className="ep-askhint-cta">Zu „Fragen?“ →</span>
             </span>
           </button>

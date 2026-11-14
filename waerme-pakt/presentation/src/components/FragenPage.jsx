@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './fragen.css';
 
-// "Fragen" tab: the Wärme-Pakt advisor from the Python app (static/app.js, step 3), same backend (/api/chat).
+// "Fragen" tab: the advisor from the Wärme-Pakt Python app, shown as the EnergiePlus advisor (static/app.js, step 3), same backend (/api/chat).
 // The server builds the context from address and house data and answers with Claude, or offline without an API key.
 // In development Vite proxies /api to the Python server (vite.config.js); in the build both share one origin.
 
@@ -106,7 +106,7 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
     setBusy(true);
     let reply;
     try {
-      const res = await api('/api/chat', { messages: history, strasse: street, hausnummer: houseNo, inputs: inputs || undefined });
+      const res = await api('/api/chat', { messages: history, strasse: street, hausnummer: houseNo, inputs: inputs || undefined, marke: 'EnergiePlus' });
       reply = { role: 'assistant', content: res.text, ticket: res.ticket };
     } catch (err) {
       reply = { role: 'assistant', local: true, content: `Entschuldigung, das hat nicht geklappt (${err.message}).` };
@@ -124,7 +124,7 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
     <div className="ep-page" style={{ maxWidth: 1080 }}>
       <div>
         <p className="eyebrow">Fragen</p>
-        <h1 style={{ fontSize: 30 }}>Fragen Sie den Wärme-Pakt-Berater</h1>
+        <h1 style={{ fontSize: 30 }}>Fragen Sie den EnergiePlus-Berater</h1>
         <p className="muted" style={{ marginTop: 6 }}>
           Er kennt Ihre Adresse und Ihre Hausdaten und rechnet nur mit diesen Zahlen. Er erfindet keine Preise.
         </p>
@@ -135,7 +135,7 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
           <div className="fr-head">
             <span className="fr-avatar" aria-hidden="true">W</span>
             <div>
-              <b>Wärme-Pakt-Berater</b>
+              <b>EnergiePlus-Berater</b>
               <small>{mode}</small>
             </div>
           </div>

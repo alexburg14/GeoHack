@@ -192,7 +192,7 @@ export default function MitgliederPage({ demandKwh, onCheckAddress, initialTab =
     setReferrals((rs) => rs.map((r, i) => (i === idx ? { ...r, status: 'zugesagt', neu_zugesagt: true } : r)));
     flash(`${referrals[idx].name} hat zugesagt. ${areaOfStreet(findStreet(referrals[idx].strasse))?.name} rückt näher an die Schwelle.`);
   };
-  const inviteLink = `https://waerme-pakt.example.de/?von=empfehlung&code=${DEMO_MEMBER.nummer}`;
+  const inviteLink = `https://www.fernwaerme-anschluss.example.de/?von=empfehlung&code=${DEMO_MEMBER.nummer}`;
   const copyLink = () => {
     navigator.clipboard?.writeText(inviteLink).then(() => flash('Link kopiert.'), () => {});
   };

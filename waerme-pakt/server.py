@@ -262,7 +262,8 @@ class Handler(BaseHTTPRequestHandler):
                 demand = cm.heat_demand_kwh(inputs, ASSUMPTIONS)
                 stake = cm.stake_return(float(body["beteiligung_eur"]), demand, ASSUMPTIONS)
         context = advisor.build_context(check, inputs, comparison, stake, ASSUMPTIONS)
-        return advisor.answer(messages, context, API_KEY, MODEL, BASE_URL)
+        brand = "EnergiePlus" if body.get("marke") == "EnergiePlus" else "Wärme-Pakt"  # fixed list, not free text
+        return advisor.answer(messages, context, API_KEY, MODEL, BASE_URL, brand)
 
     def ticket(self, body):
         phone = str(body.get("telefon", "")).strip()

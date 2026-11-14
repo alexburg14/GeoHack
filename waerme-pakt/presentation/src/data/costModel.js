@@ -123,7 +123,8 @@ function scenarioDistrict(inputs, demand, connYear, years) {
       co2Kg += co2;
     } else {
       const priceCt = v(f, 'mischpreis_ct') * (1 + v(f, 'preissteigerung')) ** i;
-      const renewal = i === renewalYear ? v(f, 'station_erneuerung_eur') : 0;
+      // new transfer station after its lifetime, counted per year it runs inside the horizon (like the other devices)
+      const renewal = i >= renewalYear ? v(f, 'station_erneuerung_eur') / v(f, 'station_lebensdauer') : 0;
       renewals += renewal;
       yearly.push((demand * priceCt) / 100 + v(f, 'wartung_eur') + (i === k ? invest : 0) + renewal);
       co2Kg += demand * v('co2', 'faktor_geothermie');

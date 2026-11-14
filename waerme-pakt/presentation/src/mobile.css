@@ -43,12 +43,18 @@ html, body, #root { height: 100%; }
 
   /* Home: only the rotating slide, filling the first screen; the next section follows on scroll.
      The intro wrapper dissolves (display: contents) so heading, slide and buttons can be ordered. */
-  .ep-guarantees.hero { display: flex; flex-direction: column; gap: 14px; min-height: 100%; padding: 18px 16px 14px; }
+  .ep-guarantees.hero { display: flex; flex-direction: column; align-items: stretch; gap: 14px; min-height: 100%; padding: 18px 16px 14px; }
   .ep-guarantees-intro { display: contents; }
   .ep-guarantees .eyebrow { order: 1; margin-bottom: -8px; }
   .ep-guarantees.hero h2 { order: 2; font-size: 27px; margin: 0; }
   .ep-gnav { display: none; }
-  .ep-guarantees.hero .ep-gslide { order: 3; flex: 1; min-height: 0; padding: 22px 20px 18px; border-radius: 18px; }
+  /* Carousel fills the space; the next slide peeks in from the right, controls sit below (apple.com style) */
+  .ep-gcarousel { order: 3; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+  .ep-gtrack { flex: 1; min-height: 0; margin: 0 -16px; padding: 0 16px; gap: 10px; scroll-padding: 0 16px; border-radius: 0; }
+  .ep-gslide, .ep-guarantees.hero .ep-gslide { flex: 0 0 calc(100% - 26px); min-height: 0; padding: 22px 20px 18px; border-radius: 18px; }
+  .ep-gcontrols { position: static; justify-content: center; }
+  .ep-gcontrols .arrows { display: none; }
+  .ep-gplay, .ep-gplay:hover { background: var(--paper2); border: 0; color: var(--ink); }
   .ep-gcta { order: 4; margin-top: 0; gap: 10px; }
   .ep-gcta .ep-btn.big { flex: 1 1 auto; font-size: 15.5px; padding: 14px 16px; }
   .ep-gproof { flex-basis: 100%; text-align: center; }
@@ -59,7 +65,6 @@ html, body, #root { height: 100%; }
   .ep-gslide h3 { font-size: 24px; margin: 10px 0 8px; }
   .ep-gslide .claim { font-size: 17px; }
   .ep-gslide .detail { font-size: 14px; margin-top: 10px; }
-  .ep-gslide-foot { padding-top: 16px; }
   .ep-home-section { padding: 28px 14px 36px; }
 
   /* Member portal */
