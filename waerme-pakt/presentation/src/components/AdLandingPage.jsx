@@ -165,7 +165,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
     { id: 'pruefen', num: '1', label: 'Prüfen', done: addressDone, enabled: true },
     { id: 'rechnen', num: '2', label: 'Rechnen', done: hasResult, enabled: addressDone },
     { id: 'ergebnis', num: '✓', label: 'Ergebnis', done: false, enabled: hasResult },
-    { id: 'fragen', num: '?', label: 'Fragen', done: false, enabled: true },
+    { id: 'fragen', num: null, label: 'Fragen?', done: false, enabled: true },
   ];
   const links = [
     { id: 'nachbarschaft', label: 'Nachbarschaft' },
@@ -237,7 +237,7 @@ export default function AdLandingPage({ clickedFrom, onBackToSearch }) {
               className={`${page === s.id ? 'active' : ''} ${s.done && page !== s.id ? 'done' : ''}`}
               onClick={() => setPage(s.id)}
             >
-              <span className="num">{s.num}</span>
+              {s.num && <span className="num">{s.num}</span>}
               {s.label}
             </button>
           ))}

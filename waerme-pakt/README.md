@@ -30,7 +30,7 @@ damit die Live-Demo nie hängen bleibt.
 
 „Demo zurücksetzen“ (Fußzeile) stellt die Zusagen wieder auf den Ausgangsstand.
 
-**Fragen** (in der Such-Demo, Kopfzeile „? Fragen“): derselbe KI-Berater wie in Schritt 3 der App, über `/api/chat`.
+**Fragen** (in der Such-Demo, Kopfzeile „Fragen?“): derselbe KI-Berater wie in Schritt 3 der App, über `/api/chat`.
 Die Such-Demo braucht dafür den laufenden Python-Server: im Build (`/presentation/` auf Port 8000) dieselbe Adresse,
 im Vite-Dev-Server leitet `vite.config.js` `/api` an `http://127.0.0.1:8000` weiter.
 
