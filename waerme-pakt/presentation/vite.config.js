@@ -9,6 +9,8 @@ export default defineConfig({
     allowedHosts: ['.trycloudflare.com'],
     // the cost model reads ../config/assumptions.json (shared with the Python app)
     fs: { allow: ['..'] },
+    // the "Fragen" tab talks to the advisor of the Python app (python3 server.py, port 8000)
+    proxy: { '/api': 'http://127.0.0.1:8000' },
   },
   build: {
     outDir: '../static/presentation',

@@ -11,6 +11,10 @@
     "anteile": 4,
     "iban": "DE89370400440532013000",
     "kontoinhaber": "Anna Huber",
+    "heizung": {"art": "Gas-Brennwertkessel", "baujahr": 2009},
+    "meldungen": [
+      {"nummer": "WP-2026-3817", "datum": "2026-10-21", "art": "Geräusche oder Fehlermeldung", "text": "Kessel klackert beim Anspringen.", "stufe": 3, "loesung": "Zündelektrode gereinigt, Kessel läuft wieder normal."}
+    ],
     "zahlungen": [
       {"datum": "2026-10-05", "text": "Einlage 4 Anteile, Rate 1 von 2", "betrag": 1000, "status": "gebucht"},
       {"datum": "2027-01-05", "text": "Einlage 4 Anteile, Rate 2 von 2", "betrag": 1000, "status": "geplant"}

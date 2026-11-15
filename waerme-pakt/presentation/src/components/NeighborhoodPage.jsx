@@ -115,7 +115,7 @@ export default function NeighborhoodPage({ myAreaId, onCheckAddress, embedded = 
           <b>{pct(totals.pledged / totals.households)}</b>
         </div>
         <div className="ep-kpi">
-          <small>Viertel über {pct(THRESHOLD)}</small>
+          <small>Stadtviertel über {pct(THRESHOLD)}</small>
           <b>
             {AREAS.filter((a) => share(a) >= THRESHOLD).length} von {AREAS.length}
           </b>
@@ -170,13 +170,13 @@ export default function NeighborhoodPage({ myAreaId, onCheckAddress, embedded = 
           <div className="ep-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
               <h2 style={{ margin: 0 }}>{sel.name}</h2>
-              {sel.id === myAreaId && <span className="ep-tag">Ihr Viertel</span>}
+              {sel.id === myAreaId && <span className="ep-tag">Ihr Stadtviertel</span>}
             </div>
             <p className="muted" style={{ fontSize: 13.5, marginTop: 4 }}>
               Anschlüsse {sel.years} · rund {Math.round(sel.households / 10) * 10} Haushalte
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16, fontSize: 14 }}>
-              <strong>Zusagen im Viertel</strong>
+              <strong>Zusagen im Stadtviertel</strong>
               <strong style={{ color: 'var(--accent)' }}>{pct(selShare)}</strong>
             </div>
             <div className="ep-progress">
@@ -209,7 +209,7 @@ export default function NeighborhoodPage({ myAreaId, onCheckAddress, embedded = 
           </div>
 
           <div className="ep-card">
-            <h3 style={{ marginBottom: 10 }}>Welches Viertel liegt vorne?</h3>
+            <h3 style={{ marginBottom: 10 }}>Welches Stadtviertel liegt vorne?</h3>
             <ol className="ep-ranking">
               {ranking.map((a, i) => (
                 <li key={a.id} className={a.id === selectedId ? 'on' : ''}>
@@ -238,7 +238,7 @@ export default function NeighborhoodPage({ myAreaId, onCheckAddress, embedded = 
         </button>
       </div>
       <p className="muted" style={{ fontSize: 12 }}>
-        Demodaten: Haushalte und Zusagen sind Platzhalter, zusammengefasst nach Viertel. Kartendaten © OpenStreetMap-Mitwirkende.
+        Demodaten: Haushalte und Zusagen sind Platzhalter, zusammengefasst nach Stadtviertel. Kartendaten © OpenStreetMap-Mitwirkende.
       </p>
     </div>
   );

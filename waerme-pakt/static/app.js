@@ -203,13 +203,14 @@ function renderCompare() {
     const title = k === "bestand" ? `Weiter mit ${fuel}` : OPTION_LABELS[k];
     const extra = k === "fernwaerme"
       ? `<dt>Anschluss</dt><dd>${r.anschlussjahr}${o.jahre_bis_anschluss ? `, bis dahin ${fuel}` : ""}</dd>`
-      : k === "bestand" && o.investition_eur ? "<dt>Kesseltausch</dt><dd>enthalten</dd>" : "";
+      : "";
     return `<div class="card option ${k}">
       <h3>${esc(title)}</h3>
       <div class="total">${eur(o.gesamt_eur)}</div>
       <small class="note">Gesamtkosten in 20 Jahren</small>
       <dl>
-        <dt>Investition</dt><dd>${eur(o.investition_eur)}</dd>
+        <dt>Investition ${k === "fernwaerme" ? "beim Anschluss" : "heute"}</dt><dd>${eur(o.anschaffung_eur)}</dd>
+        ${o.investition_eur > o.anschaffung_eur ? `<dt>${k === "bestand" ? "Neuer Kessel" : "Ersatzgerät"} (anteilig)</dt><dd>${eur(o.investition_eur - o.anschaffung_eur)}</dd>` : ""}
         <dt>Laufend Ø pro Jahr</dt><dd>${eur(running)}</dd>
         <dt>CO₂ in 20 Jahren</dt><dd>${num(o.co2_t, 1)} t</dd>
         ${extra}

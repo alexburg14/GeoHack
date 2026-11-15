@@ -99,35 +99,44 @@ def _fossil_year(inputs, a, demand, i):
 
 
 def scenario_keep(inputs, a, demand):
-    """Keep gas/oil; the boiler is replaced once when it reaches its lifetime."""
+    """Keep gas/oil; a new boiler once the old one reaches its lifetime.
+
+    Replacements are counted per year they run inside the horizon (cost / lifetime), so a unit bought
+    late in the period is not charged in full. Same rule as for the heat pump.
+    """
     years = v(a, "allgemein", "jahre")
     lifetime = v(a, "bestand", "kessel_lebensdauer")
-    yearly, co2_kg, invest, replaced = [], 0.0, 0.0, False
+    yearly, co2_kg, invest = [], 0.0, 0.0
     for i in range(years):
         cost, co2 = _fossil_year(inputs, a, demand, i)
-        if not replaced and inputs["heizungsalter"] + i >= lifetime:
-            cost += v(a, "bestand", "kesseltausch_eur")
-            invest += v(a, "bestand", "kesseltausch_eur")
-            replaced = True
+        if inputs["heizungsalter"] + i >= lifetime:
+            share = v(a, "bestand", "kesseltausch_eur") / lifetime
+            cost += share
+            invest += share
         yearly.append(cost)
         co2_kg += co2
-    return _summary(yearly, invest, co2_kg)
+    return _summary(yearly, invest, co2_kg, upfront=0.0)
 
 
 def scenario_heat_pump(inputs, a, demand):
-    """Install a heat pump now (year 0)."""
+    """Install a heat pump now (year 0); replaced at the end of its lifetime."""
     w = "waermepumpe"
     invest = v(a, w, "investition_eur") * (1 - v(a, w, "foerderquote"))
     if inputs["baujahr"] <= v(a, w, "altbau_bis_baujahr"):
         invest += v(a, w, "zusatzkosten_altbau_eur")
     power_kwh = demand / lookup_by_year(a[w]["jaz"]["stufen"], inputs["baujahr"])
+    lifetime = v(a, w, "lebensdauer")
+    first_invest = invest
     yearly, co2_kg = [], 0.0
     for i in range(v(a, "allgemein", "jahre")):
         price_ct = v(a, w, "strompreis_ct") * (1 + v(a, w, "preissteigerung")) ** i
         cost = power_kwh * price_ct / 100 + v(a, w, "grundpreis_eur") + v(a, w, "wartung_eur")
-        yearly.append(cost + (invest if i == 0 else 0))
+        # new unit at the end of the lifetime (no subsidy), counted per year it runs inside the horizon
+        replacement = v(a, w, "ersatz_eur") / lifetime if i >= lifetime else 0
+        invest += replacement
+        yearly.append(cost + (first_invest if i == 0 else 0) + replacement)
         co2_kg += power_kwh * v(a, "co2", "faktor_strom") * (1 - v(a, "co2", "strom_rueckgang")) ** i
-    return _summary(yearly, invest, co2_kg)
+    return _summary(yearly, invest, co2_kg, upfront=first_invest)
 
 
 def scenario_district(inputs, a, demand, conn_year, stake_eur=0):
@@ -151,12 +160,13 @@ def scenario_district(inputs, a, demand, conn_year, stake_eur=0):
             co2 = demand * v(a, "co2", "faktor_geothermie")
         yearly.append(cost)
         co2_kg += co2
-    summary = _summary(yearly, invest, co2_kg)
+    summary = _summary(yearly, invest, co2_kg, upfront=invest)
     summary["jahre_bis_anschluss"] = k
     return summary
 
 
-def _summary(yearly, invest, co2_kg):
+def _summary(yearly, invest, co2_kg, upfront):
+    """invest: all investments inside the horizon; upfront: what the option costs when it starts."""
     cumulative, total = [], 0.0
     for cost in yearly:
         total += cost
@@ -164,6 +174,7 @@ def _summary(yearly, invest, co2_kg):
     return {
         "gesamt_eur": round(total),
         "investition_eur": round(invest),
+        "anschaffung_eur": round(upfront),
         "kumuliert_eur": cumulative,
         "co2_t": round(co2_kg / 1000, 1),
     }

@@ -20,7 +20,7 @@ const PRESETS = [
 
 const eur = (n) => `${Math.round(n).toLocaleString('de-DE')} €`;
 
-export default function FactorPanel({ factors, setFactors, defaultJaz, result, baseline, keys, meta, label, horizon = 20 }) {
+export default function FactorPanel({ factors, setFactors, defaultJaz, result, baseline, keys, meta, label, years = 20 }) {
   const value = (s) => factors[s.key] ?? (s.key === 'waermepumpe.jaz' ? defaultJaz : FACTOR_DEFAULTS[s.key]);
   const set = (key, x) => setFactors((f) => ({ ...f, [key]: x }));
   const activePreset = PRESETS.find(
@@ -84,7 +84,7 @@ export default function FactorPanel({ factors, setFactors, defaultJaz, result, b
 
         <div className="ep-swings">
           <p className="muted" style={{ fontSize: 13, marginBottom: 10 }}>
-            Ihre Kosten über {horizon} Jahre, im Vergleich zur Erwartung
+            Ihre Kosten über {years} Jahre, im Vergleich zur Erwartung
           </p>
           {swings.map((s) => (
             <div key={s.k} className="ep-swing">

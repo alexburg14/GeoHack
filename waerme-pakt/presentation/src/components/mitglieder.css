@@ -83,10 +83,22 @@
 .mp-referrals small { color: var(--soft); font-size: 12.5px; }
 .mp-ref-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .mp-ref-steps { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin: 8px 0 0; padding: 0; }
-.mp-ref-steps li { font-size: 11.5px; color: var(--soft); padding-top: 6px; border-top: 4px solid var(--paper2); }
+.mp-ref-steps li { hyphens: auto; font-size: 11.5px; color: var(--soft); padding-top: 6px; border-top: 4px solid var(--paper2); }
 .mp-ref-steps li.done { border-top-color: var(--ok); color: var(--ink); font-weight: 600; }
 .mp-simulate, .mp-inline { border: 0; background: none; padding: 0; color: var(--accent); font-size: 12.5px; font-weight: 600; cursor: pointer; text-decoration: underline; }
 .mp-simulate { margin-top: 8px; }
 
 .mp-toast { position: sticky; bottom: 0; align-self: center; background: var(--ok); color: #fff; padding: 12px 20px; border-radius: 12px;
   font-weight: 600; font-size: 14px; box-shadow: var(--shadow); animation: epRise 0.25s ease-out; }
+
+/* Störung melden */
+.mp-safety { background: #fff4ec; border: 1px solid #f1c9ae; border-radius: 12px; padding: 10px 14px; font-size: 13px; line-height: 1.45; margin-top: 6px; }
+.mp-problems { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.mp-problems .ep-option { display: flex; align-items: center; gap: 8px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.mp-problems .emoji { font-size: 18px; }
+.ep .mp-textarea, .ep .mp-select { width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff;
+  font: inherit; color: var(--ink); }
+.ep .mp-textarea { resize: vertical; }
+.ep .mp-textarea:focus, .ep .mp-select:focus { outline: 2px solid var(--hot); outline-offset: 1px; border-color: var(--hot); }
+.mp-guarantee-hit { background: #d8ede5; color: var(--ok); border-radius: 12px; padding: 10px 14px; font-size: 13px; line-height: 1.45; margin-top: 14px; }
+.mp-problems .ep-option.selected { padding: 9px 11px; }

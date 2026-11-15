@@ -52,7 +52,8 @@ def build_context(check, inputs, comparison, stake, assumptions):
             "optionen": {
                 labels[key]: {
                     "gesamtkosten_eur": opt["gesamt_eur"],
-                    "investition_eur": opt["investition_eur"],
+                    "anschaffung_eur": opt["anschaffung_eur"],
+                    "investition_inkl_ersatz_eur": opt["investition_eur"],
                     "co2_tonnen_20_jahre": opt["co2_t"],
                 }
                 for key, opt in comparison["optionen"].items()
@@ -68,11 +69,11 @@ def build_context(check, inputs, comparison, stake, assumptions):
     return json.dumps(context, ensure_ascii=False, indent=1)
 
 
-def answer(messages, context, api_key, model=DEFAULT_MODEL, base_url=None):
+def answer(messages, context, api_key, model=DEFAULT_MODEL, base_url=None, brand="Wärme-Pakt"):
     """Return {"text", "mode", "ticket"}; mode is "llm" or "offline"."""
     if api_key:
         try:
-            text = _call_claude(messages, context, api_key, model, base_url)
+            text = _call_claude(messages, context, api_key, model, base_url, brand)
             return _finish(text, "llm")
         except (urllib.error.URLError, TimeoutError, KeyError, ValueError) as err:
             print(f"[advisor] API call failed, using offline answer: {err}")
@@ -84,11 +85,12 @@ def _finish(text, mode):
     return {"text": text.replace(TICKET_TOKEN, "").strip(), "mode": mode, "ticket": ticket}
 
 
-def _call_claude(messages, context, api_key, model, base_url):
+def _call_claude(messages, context, api_key, model, base_url, brand="Wärme-Pakt"):
     body = {
         "model": model,
         "max_tokens": 16000,
-        "system": f"{SYSTEM_PROMPT}\n\nKONTEXT (JSON):\n{context}",
+        # the landing page uses the advisor under its own brand (EnergiePlus)
+        "system": f"{SYSTEM_PROMPT.replace('Wärme-Pakt-Berater', f'{brand}-Berater')}\n\nKONTEXT (JSON):\n{context}",
         "messages": messages,
         "output_config": {"effort": "low"},
         "fallbacks": "default",
