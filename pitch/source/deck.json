@@ -1,0 +1,56 @@
+{
+  "v": 5,
+  "attachments": {},
+  "createdOnFiles": {
+    "at": "2026-11-13T18:30:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "faces": {
+    "inter": {
+      "family": "Inter",
+      "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    },
+    "montserrat": {
+      "family": "Montserrat",
+      "href": "https://fonts.googleapis.com/css2?family=Montserrat:wght@400..800&display=swap"
+    }
+  },
+  "format": {
+    "shared": [
+      "project/deck.css"
+    ],
+    "v": 1
+  },
+  "lists": "css",
+  "order": [
+    "cover",
+    "geschichte",
+    "problem",
+    "modell",
+    "risiken",
+    "loesung-warten",
+    "loesung-schwelle",
+    "loesung-preis",
+    "loesung-bindung",
+    "genossenschaft",
+    "schluss"
+  ],
+  "sections": {
+    "s1": {
+      "before": null,
+      "description": "Geschichte und Problem: Warum niemand unterschreibt",
+      "start": "cover"
+    },
+    "s2": {
+      "description": "Lösung: eine Garantie pro Sorge, zusammengehalten von der Genossenschaft",
+      "start": "loesung-warten"
+    },
+    "s3": {
+      "before": null,
+      "description": "Technik, Wirtschaftlichkeit und Schluss",
+      "start": "schluss"
+    }
+  },
+  "title": "EnergiePlus – Pitch"
+}
