@@ -34,6 +34,10 @@ damit die Live-Demo nie hängen bleibt.
 Die Such-Demo braucht dafür den laufenden Python-Server: im Build (`/presentation/` auf Port 8000) dieselbe Adresse,
 im Vite-Dev-Server leitet `vite.config.js` `/api` an `http://127.0.0.1:8000` weiter.
 
+**Als eine Datei verschicken:** `cd presentation && npm run build:standalone` erzeugt `EnergiePlus-Demo.html`
+(alles in einer Datei, Doppelklick genügt, kein npm/Server). Braucht Internet für Schriften, Leaflet und Kartenkacheln.
+Ohne Server beantwortet „Fragen?“ nur die vorbereiteten Fragen.
+
 **Mitgliederportal** (in der Such-Demo unter `/presentation/`): Suche → Anzeige klicken → „Mitglieder“ in der Kopfzeile
 (oder nach „Beitritt bestätigen“ auf „Genossenschaft“). Familie Huber als Mitglied: Fortschritt bis zum Wärmerabatt,
 Zahlungen (weitere Anteile in Raten, Bankverbindung), Nachbarn werben, Störung melden (Wartegarantie: Übergangsheizung
