@@ -202,7 +202,7 @@ export default function App() {
           <ol className="demo-list" style={{ marginTop: -8 }}>
             {[
               ['Adresse prüfen:', ' Straße in Bauphase 2, Anschluss voraussichtlich 2029'],
-              ['Situation eingeben:', ' 20 Jahre Geothermie, Wärmepumpe und Gas im Vergleich'],
+              ['Situation eingeben:', ' 40 Jahre Geothermie, Wärmepumpe und Gas im Vergleich'],
               ['Berater fragen:', ' „Was passiert, wenn meine Heizung vorher kaputtgeht?“'],
               ['Beteiligen:', ' Mitglied werden und 10 Jahre weniger für Wärme zahlen'],
               ['„Ich bin dabei“:', ' Die Ottostraße springt von 61 % auf 67 % – über die Schwelle'],

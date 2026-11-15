@@ -29,7 +29,7 @@ export default function LongRunStory({ scrollRoot, result, keys, meta, label, he
       const box = outer.current.getBoundingClientRect();
       const top = root.getBoundingClientRect().top;
       const travel = box.height - root.clientHeight;
-      setProgress(Math.max(0, Math.min(1, (top - box.top) / travel)));
+      setProgress(travel > 0 ? Math.max(0, Math.min(1, (top - box.top) / travel)) : 0);
     };
     update();
     root.addEventListener('scroll', update, { passive: true });
