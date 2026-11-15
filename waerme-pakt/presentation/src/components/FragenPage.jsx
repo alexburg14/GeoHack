@@ -39,6 +39,9 @@ const QUESTIONS = [
 
 const stopKeys = (e) => e.stopPropagation();
 
+// Single-file demo (npm run build:standalone) has no server: prepared answers only.
+const STANDALONE = import.meta.env.VITE_STANDALONE === '1';
+
 async function api(path, body) {
   const res = await fetch(path, body === undefined ? {} : {
     method: 'POST',
@@ -59,6 +62,7 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
   const showFrom = useRef(null); // index of the message that should be at the top of the log after the next render
 
   useEffect(() => {
+    if (STANDALONE) return;
     api('/api/config').then((c) => setAiActive(c.ki_aktiv), () => setAiActive(null));
   }, []);
 
@@ -87,6 +91,14 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
     const question = raw.trim();
     if (!question || busy) return;
     setText('');
+    if (STANDALONE) {
+      setChat((c) => [
+        ...c,
+        { role: 'user', content: question, local: true },
+        { role: 'assistant', local: true, content: 'In dieser Demo-Datei beantworte ich nur die häufigen Fragen unten. In der Live-Version antwortet hier der KI-Berater auf jede Frage.' },
+      ]);
+      return;
+    }
     if (!street) {
       setChat((c) => [
         ...c,
@@ -115,8 +127,9 @@ export default function FragenPage({ street, houseNo, outsideNetwork, connection
     setBusy(false);
   };
 
-  const mode =
-    aiActive === null ? 'Verbindung zum Berater wird geprüft …'
+  const mode = STANDALONE
+    ? 'Demo-Datei · vorbereitete Antworten'
+    : aiActive === null ? 'Verbindung zum Berater wird geprüft …'
       : aiActive ? 'KI-Berater · antwortet nur mit Ihren Zahlen'
         : 'Offline-Modus · Standardantworten ohne KI-Schlüssel';
 
